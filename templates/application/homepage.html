@@ -1,0 +1,51 @@
+{% extends 'application/_layout.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'application/cover.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="homepage-container d-flex w-100 h-100 p-3 mx-auto flex-column text-center">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">SS Tech Poll</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
+			<ul id="login-dp" class="dropdown-menu">
+				<li>
+					 <div class="row">
+							<div class="col-md-12">
+								 <form class="form" role="form" method="post" action="" accept-charset="UTF-8" id="login-nav">
+										<div class="form-group">
+											 <label class="sr-only" for="exampleInputEmail2">Email address</label>
+											 <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email address" required>
+										</div>
+										<div class="form-group">
+											 <label class="sr-only" for="exampleInputPassword2">Password</label>
+											 <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password" required>
+										</div>
+										<div class="form-group text-center">
+											 <button type="submit" class="btn btn-lg btn-secondary btn-block">Sign in</button>
+										</div>
+								 </form>
+							</div>
+					 </div>
+				</li>
+			</ul>
+                </nav>
+            </div>
+        </header>
+
+        <main role="main" class="inner cover">
+            <h1 class="homepage-container">Tech Poll</h1>
+            <p class="lead">Pass the test by link below</p>
+            <p class="lead">
+                <a href="{% url 'redirecting' %}" class="btn btn-lg btn-secondary">Pass the test!</a>
+            </p>
+        </main>
+
+        {% include 'shared/_footer.html' %}
+
+    </div>
+{% endblock %}

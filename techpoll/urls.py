@@ -18,4 +18,5 @@ from . import views
 
 urlpatterns = [
     path('', views.HomePageView.as_view(), name='index-page'),
+    path('redir/', views.RedirectingView.as_view(), name='redirecting')
 ]
