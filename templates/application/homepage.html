@@ -6,10 +6,12 @@
 {% endblock %}
 
 {% block body %}
+            {% include 'application/homepage_modal.html' %}
     <div class="homepage-container d-flex w-100 h-100 p-3 mx-auto flex-column text-center">
         <header class="masthead mb-auto">
             <div class="inner">
-                <h3 class="masthead-brand">SS Tech Poll</h3>
+                <img src="{% static 'application/logo-root.svg' %}" class="masthead-brand">
+{#                <h3 class="masthead-brand">SS Tech Poll</h3>#}
                 <nav class="nav nav-masthead justify-content-center">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
 			<ul id="login-dp" class="dropdown-menu">
@@ -37,11 +39,13 @@
             </div>
         </header>
 
+
+
         <main role="main" class="inner cover">
             <h1 class="homepage-container">Tech Poll</h1>
             <p class="lead">Pass the test by link below</p>
             <p class="lead">
-                <a href="{% url 'redirecting' %}" class="btn btn-lg btn-secondary">Pass the test!</a>
+                <a href="#" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#myModal">Pass the test!</a>
             </p>
         </main>
 
