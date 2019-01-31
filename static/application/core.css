@@ -13,6 +13,10 @@ main > .container {
   padding: 60px 15px 0;
 }
 
+.container {
+    margin-top: auto;
+}
+
 .footer > .container {
   padding-right: 15px;
   padding-left: 15px;
