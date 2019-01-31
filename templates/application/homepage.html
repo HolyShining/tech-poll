@@ -2,54 +2,58 @@
 {% load static %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'application/cover.css' %}">
+  <link rel="stylesheet" href="{% static 'application/cover.css' %}">
 {% endblock %}
 
 {% block body %}
-    {% include 'application/homepage_modal.html' %}
-    <div class="homepage-container d-flex w-100 h-100 p-3 mx-auto flex-column text-center">
-        <header class="header mb-auto">
-            <div class="inner">
-                <img src="{% static 'application/logo-root.svg' %}" class="header-brand">
-                {#                <h3 class="header-brand">SS Tech Poll</h3>#}
-                <nav class="nav nav-header justify-content-center">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
-                    <ul id="login-dp" class="dropdown-menu">
-                        <li>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <form class="form" role="form" method="post" action="" accept-charset="UTF-8" id="login-nav">
-                                        <div class="form-group">
-                                            <label class="sr-only" for="exampleInputEmail2">Email address</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email address" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="sr-only" for="exampleInputPassword2">Password</label>
-                                            <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password" required>
-                                        </div>
-                                        <div class="form-group text-center">
-                                            <button type="submit" class="btn btn-lg btn-secondary btn-block">Sign in</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
+  {% if not user.is_authenticated %}
+    {% include 'application/homepage/login_modal.html' %}
+  {% endif %}
+  <div class="homepage-container d-flex w-100 h-100 p-3 mx-auto flex-column text-center">
+    <header class="header mb-auto">
+      <div class="inner">
+        <img src="{% static 'application/logo-root.svg' %}" class="header-brand">
+        <nav class="nav nav-header justify-content-center">
+          {% if user.is_authenticated %}
+          {% else %}
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
+          <ul id="login-dp" class="dropdown-menu">
+            <li>
+              <div class="row">
+                <div class="col-md-12">
+                  <form class="form" role="form" method="post" action="" accept-charset="UTF-8" id="login-nav">
+                    <div class="form-group">
+                      <label class="sr-only" for="username">Username</label>
+                      <input type="text" class="form-control" id="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="sr-only" for="password">Password</label>
+                      <input type="password" class="form-control" id="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group text-center">
+                      <button type="submit" class="btn btn-lg btn-secondary btn-block">Sign in</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </li>
+          </ul>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
 
 
 
-        <main role="main" class="inner">
-            <h1 class="homepage-container">Tech Poll</h1>
-            <p class="lead">Pass the test by link below</p>
-            <p class="lead">
-                <a href="#" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#myModal">Pass the test!</a>
-            </p>
-        </main>
+    <main role="main" class="inner">
+      <h1 class="homepage-container">Tech Poll</h1>
+      <p class="lead">Pass the test by link below</p>
+      <p class="lead">
+        <a href="#" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#myModal">Pass the test!</a>
+      </p>
+    </main>
 
-        {% include 'shared/_footer.html' %}
+    {% include 'shared/_footer.html' %}
 
-    </div>
+  </div>
 {% endblock %}

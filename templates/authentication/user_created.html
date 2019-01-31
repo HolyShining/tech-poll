@@ -1,0 +1,14 @@
+{% extends 'application/_layout.html' %}
+
+{% block content %}
+  {% if error %}
+    {{ error }}
+    <br/>
+    <br/>
+  {% endif %}
+  <div class="container">
+    <h1>User Created!</h1>
+    <h4>Username: {{ username }}</h4>
+    <h4>Password: {{ password }}</h4>
+  </div>
+{% endblock %}
