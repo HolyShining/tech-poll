@@ -12,32 +12,41 @@
   <div class="homepage-container d-flex w-100 h-100 p-3 mx-auto flex-column text-center">
     <header class="header mb-auto">
       <div class="inner">
+        <a href="{% url 'home-page' %}">
         <img src="{% static 'application/logo-root.svg' %}" class="header-brand">
+        </a>
         <nav class="nav nav-header justify-content-center">
           {% if user.is_authenticated %}
+            <p class="nav-link" id="name"><b>Loged as: {{ user.username }}</b></p>
+            <a class="nav-link" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+            <form id="logout" method="POST" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <input type="hidden"/>
+            </form>
           {% else %}
-          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
-          <ul id="login-dp" class="dropdown-menu">
-            <li>
-              <div class="row">
-                <div class="col-md-12">
-                  <form class="form" role="form" method="post" action="" accept-charset="UTF-8" id="login-nav">
-                    <div class="form-group">
-                      <label class="sr-only" for="username">Username</label>
-                      <input type="text" class="form-control" id="username" placeholder="Username" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="sr-only" for="password">Password</label>
-                      <input type="password" class="form-control" id="password" placeholder="Password" required>
-                    </div>
-                    <div class="form-group text-center">
-                      <button type="submit" class="btn btn-lg btn-secondary btn-block">Sign in</button>
-                    </div>
-                  </form>
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
+            <ul id="login-dp" class="dropdown-menu">
+              <li>
+                <div class="row">
+                  <div class="col-md-12">
+                    <form class="form" method="POST" action="{% url 'login' %}">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label class="sr-only" for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                      </div>
+                      <div class="form-group">
+                        <label class="sr-only" for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                      </div>
+                      <div class="form-group text-center">
+                        <button type="submit" class="btn btn-lg btn-secondary btn-block">Sign in</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
           {% endif %}
         </nav>
       </div>
@@ -56,4 +65,7 @@
     {% include 'shared/_footer.html' %}
 
   </div>
+{% endblock %}
+
+{% block scripts %}
 {% endblock %}

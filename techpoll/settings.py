@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'actions.apps.ActionsConfig',
     'answers.apps.AnswersConfig',
     'authentication.apps.AuthenticationConfig',
+    'dashboards.apps.DashboardsConfig',
 ]
 
 MIDDLEWARE = [
