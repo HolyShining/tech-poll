@@ -64,7 +64,7 @@ class LogoutView(TemplateView):
 
 class Routing(TemplateView):
     def get(self, request, *args, **kwargs):
-        role = models.UserData.objects.get(fAuth_id=request.user.id).fRole.name
+        role = models.UserData.objects.get(f_auth_id=request.user.id).f_role.name
         if role == 'User':
             return redirect('user-dashboard')
         if role == 'Admin':

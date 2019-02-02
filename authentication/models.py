@@ -11,8 +11,8 @@ class UserData(models.Model):
     name = models.CharField(max_length=32)
     surname = models.CharField(max_length=32)
     encrypted_pass = models.CharField(max_length=16, null=True)
-    fAuth = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    fRole = models.ForeignKey('RolesModel', on_delete=models.DO_NOTHING, default=2)
+    f_auth = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    f_role = models.ForeignKey('RolesModel', on_delete=models.DO_NOTHING, default=2)
 
     def __str__(self):
         return '{name} {surname}'.format(name=self.name, surname=self.surname)

@@ -58,7 +58,11 @@
       <h1 class="homepage-container">Tech Poll</h1>
       <p class="lead">Pass the test by link below</p>
       <p class="lead">
-        <a href="#" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#myModal">Pass the test!</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'auth-routing' %}" class="btn btn-lg btn-secondary">Pass the test!</a>
+        {% else %}
+          <a href="#" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#myModal">Pass the test!</a>
+        {% endif %}
       </p>
     </main>
 
