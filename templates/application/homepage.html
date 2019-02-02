@@ -17,7 +17,7 @@
         </a>
         <nav class="nav nav-header justify-content-center">
           {% if user.is_authenticated %}
-            <p class="nav-link" id="name"><b>Loged as: {{ user.username }}</b></p>
+            <p class="nav-link" id="name"><b>Loged as: {{ user.userdata }}</b></p>
             <a class="nav-link" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
             <form id="logout" method="POST" action="{% url 'logout' %}">
               {% csrf_token %}

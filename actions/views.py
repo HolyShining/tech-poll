@@ -55,3 +55,15 @@ class QuestionView(View):
                              'Question "{}" created successfully!'.format(question.name))
         question.save()
         return redirect('auth-routing')
+
+
+class DepartmentsView(View):
+    def get(self, request):
+        return render(request, 'actions/create_departments.html', {})
+
+    def post(self, request):
+        department = None
+        messages.add_message(request,
+                             messages.SUCCESS,
+                             'Department "{}" created successfully!'.format(request.POST['name']))
+        return redirect('auth-routing')

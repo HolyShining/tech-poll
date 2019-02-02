@@ -31,7 +31,7 @@ class SignUpView(TemplateView):
         data = models.UserData(name=request.POST['name'],
                                surname=request.POST['surname'],
                                encrypted_pass=pswrd,
-                               fAuth=new_user)
+                               f_auth=new_user)
         data.save()
         return render(request, 'authentication/user_created.html', {
             'username': usrname,
