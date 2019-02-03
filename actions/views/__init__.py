@@ -6,3 +6,4 @@ from .HomeView import HomeView
 from .LoadFileView import LoadFileView
 from .ModelView import SectionView, StagesView, QuestionsView
 from .DetailView import SectionDetailView, StageDetailView, QuestionDetailView
+from .DepartmentResponse import DepartmentResponse
