@@ -17,6 +17,16 @@
         </div>
       </div>
       <div class="form-row">
+          <div class="form-group col-md-6">
+    <label for="exampleFormControlSelect2">Select Questions</label>
+    <select multiple class="form-control" id="exampleFormControlSelect2" name="questions">
+      {% for question in questions %}
+      <option value="{{ question.pk }}">{{ question.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+      </div>
+      <div class="form-row">
         <div class="form-group col-md-3">
           <input type=button class="btn btn-lg btn-secondary btn-block" onClick="history.go(-1);"
                  value="Go back">

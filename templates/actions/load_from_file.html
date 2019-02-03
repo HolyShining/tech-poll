@@ -1,0 +1,27 @@
+{% extends 'application/_layout.html' %}
+
+{% block content %}
+  {% if error %}
+    {{ error }}
+    <br/>
+    <br/>
+  {% endif %}
+  <div class="container">
+    <h1>Load a {{ mode|title }}</h1>
+    <form method="POST" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-row">
+        <input type="file" name="loaded_file">
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <input type=button class="btn btn-lg btn-secondary btn-block" onClick="history.go(-1);"
+                 value="Go back">
+        </div>
+        <div class="form-group col-md-3">
+          <button type="submit" class="btn btn-lg btn-secondary btn-block">Load File</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}
