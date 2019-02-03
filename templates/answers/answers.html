@@ -1,0 +1,19 @@
+{% extends 'application/_layout.html' %}
+
+{% load static %}
+
+{% block content %}
+  <div class="container">
+    <h1>Recived data from json:</h1>
+    <h4 id="name-course"></h4>
+    <hr/>
+    <p id="sections-course"></p>
+    <hr/>
+    <p id="stages-course"></p>
+    <hr/>
+    <p id="questions-course"></p>
+    <hr/>
+  </div>
+
+  <script src="{% static 'answers/get_data.js' %}"></script>
+{% endblock %}
