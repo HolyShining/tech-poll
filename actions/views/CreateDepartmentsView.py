@@ -7,11 +7,11 @@ from django.contrib import messages
 class CreateDepartmentsView(View):
     def get(self, request):
         questions = QuestionsModel.objects.all()
-        return render(request, 'actions/create_departments.html', {'questions': questions})
+        return render(request, 'actions/form_departments.html', {'questions': questions})
 
     def post(self, request):
         department = None
-        print(QuestionsModel.objects.filter(id__in=[1, 2]))
+        print()
         print(request.POST.getlist('questions'))
         messages.add_message(request,
                              messages.SUCCESS,

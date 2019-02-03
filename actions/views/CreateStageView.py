@@ -8,7 +8,7 @@ from actions.models import SectionsModel, StagesModel
 class CreateStageView(View):
     def get(self, request):
         sections = SectionsModel.objects.all()
-        return render(request, 'actions/create_stages.html', {'sections': sections})
+        return render(request, 'actions/form_stages.html', {'sections': sections})
 
     def post(self, request):
         stage = StagesModel(name=request.POST['name'])

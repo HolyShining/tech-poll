@@ -1,0 +1,14 @@
+{% extends 'application/_layout.html' %}
+
+{% block content %}
+  {% if error %}
+    {{ error }}
+    <br/>
+    <br/>
+  {% endif %}
+  <div class="container">
+    <h1>User: <i>{{ object }}</i></h1>
+    <h4>Username: {{ object.f_auth.username }}</h4>
+    <h4>Password: {{ object.encrypted_pass }}</h4>
+  </div>
+{% endblock %}

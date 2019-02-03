@@ -13,6 +13,7 @@ media
 .idea/
 venv/
 techpoll/secrets.py
+.DS_Store
 
 
 

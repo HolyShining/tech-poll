@@ -8,19 +8,26 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Question title:</label>
-          <input type="text" class="form-control" name="name" placeholder="Name">
+          <input type="text" class="form-control" name="name" placeholder="Name"
+                 {% if obj %}value="{{ obj.name }}" {% endif %}>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="hint">Question hint: (optional)</label>
-          <textarea class="form-control" rows="4" cols="50" name="hint" id="hint"></textarea>
+          <textarea class="form-control" rows="4" cols="50" name="hint" id="hint">{% if obj %}{{ obj.hint }}{% endif %}</textarea>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="stage">Section:</label>
           <select class="custom-select my-1 mr-sm-2" id="stage" name="stage">
+            {% if obj %}
+              {% for stage in stages %}
+                <option value="{{ stage.pk }}"
+                  {% if stages.pk == obj.f_stage_id %} selected{% endif %}>{{ stage.name }}</option>
+              {% endfor %}
+            {% endif %}
             {% for stage in stages %}
               <option value="{{ stage.pk }}">{{ stage.name }}</option>
             {% endfor %}

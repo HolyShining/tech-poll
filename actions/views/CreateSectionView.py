@@ -7,7 +7,7 @@ from actions.models import SectionsModel
 
 class CreateSectionView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'actions/create_sections.html')
+        return render(request, 'actions/form_sections.html')
 
     def post(self, request):
         section = SectionsModel(name=request.POST['name'])

@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from . import models
 from .PasswordGenerator import get_password, randint
 
 # Create your views here.
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 
 
 class SignUpView(TemplateView):
@@ -70,3 +70,19 @@ class Routing(TemplateView):
         if role == 'Admin':
             return redirect('admin-dashboard')
         return redirect('home-page')
+
+
+class AllUsersView(View):
+    def get(self, request):
+        role = models.UserData.objects.get(f_auth_id=request.user.id).f_role.name
+        if role == 'Admin':
+            users = models.UserData.objects.all()
+        else:
+            users = models.UserData.objects.exclude(f_role__name='Admin')
+        return render(request, 'authentication/all_users.html', {'users': users})
+
+
+class UserDetail(View):
+    def get(self, request, user_id):
+        usr = get_object_or_404(models.UserData, pk=user_id)
+        return render(request, 'authentication/user_details.html', {'object': usr})

@@ -15,7 +15,7 @@ class UserData(models.Model):
     f_role = models.ForeignKey('RolesModel', on_delete=models.DO_NOTHING, default=2)
 
     def __str__(self):
-        return '{name} {surname}'.format(name=self.name, surname=self.surname)
+        return '{name} {surname}'.format(name=self.name, surname=self.surname).title()
 
 
 class PermissionsModel(models.Model):

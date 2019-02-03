@@ -8,7 +8,7 @@ from actions.models import StagesModel, QuestionsModel
 class CreateQuestionView(View):
     def get(self, request):
         stages = StagesModel.objects.all()
-        return render(request, 'actions/create_questions.html', {'stages': stages})
+        return render(request, 'actions/form_questions.html', {'stages': stages})
 
     def post(self, request):
         question = QuestionsModel(name=request.POST['name'], hint=request.POST['hint'])
