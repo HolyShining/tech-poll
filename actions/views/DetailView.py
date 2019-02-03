@@ -16,7 +16,7 @@ class DetailView(View):
 
 class SectionDetailView(DetailView):
     model = SectionsModel
-    template = 'actions/create_sections.html'
+    template = 'actions/form_sections.html'
 
     def post(self, request, section_id):
         section = get_object_or_404(SectionsModel, pk=section_id)
@@ -28,7 +28,7 @@ class SectionDetailView(DetailView):
 
 class StageDetailView(DetailView):
     model = StagesModel
-    template = 'actions/create_stages.html'
+    template = 'actions/form_stages.html'
     add_models = SectionsModel
 
     def get(self, request, object_id):
@@ -48,7 +48,7 @@ class StageDetailView(DetailView):
 
 class QuestionDetailView(DetailView):
     model = QuestionsModel
-    template = 'actions/create_questions.html'
+    template = 'actions/form_questions.html'
     add_models = StagesModel
 
     def get(self, request, object_id):
