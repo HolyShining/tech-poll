@@ -12,6 +12,8 @@ urlpatterns = [
     path('question/', views.QuestionsView.as_view(), name='questions'),
     path('question/new', views.CreateQuestionView.as_view(), name='create-question'),
     path('question/edit/<int:object_id>', views.QuestionDetailView.as_view(), name='edit-question'),
+    path('departments/', views.DepartmentsView.as_view(), name='departments'),
     path('departments/new', views.CreateDepartmentsView.as_view(), name='create-department'),
+    path('departments/edit/<int:object_id>', views.DepartmentsDetailView.as_view(), name='edit-department'),
     path('load/<mode>', views.LoadFileView.as_view(), name='load-file')
 ]

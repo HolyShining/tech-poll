@@ -21,9 +21,15 @@
           <div class="form-group col-md-6">
     <label for="exampleFormControlSelect2">Select Questions</label>
     <select multiple class="form-control" id="exampleFormControlSelect2" name="questions">
+      {% if obj %}
+        {% for question in questions %}
+      <option value="{{ question.pk }}" {% if question.pk in selected %}selected{% endif %}>{{ question.name }}</option>
+      {% endfor %}
+      {% else %}
       {% for question in questions %}
       <option value="{{ question.pk }}">{{ question.name }}</option>
       {% endfor %}
+      {% endif %}
     </select>
   </div>
       </div>

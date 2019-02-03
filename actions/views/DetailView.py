@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from actions.models import SectionsModel, StagesModel, QuestionsModel
+from actions.models import SectionsModel, StagesModel, QuestionsModel, DepartmentsModel
 from django.views.generic import View
 from django.contrib import messages
 
@@ -65,3 +65,18 @@ class QuestionDetailView(DetailView):
         question.save()
         messages.add_message(request, messages.SUCCESS, 'Question updated successfully')
         return redirect('auth-routing')
+
+
+class DepartmentsDetailView(DetailView):
+    model = DepartmentsModel
+    template = 'actions/form_departments.html'
+    add_models = QuestionsModel
+
+    def get(self, request, object_id):
+        questions = self.add_models.objects.all()
+        obj = get_object_or_404(self.model, pk=object_id)
+        selected = [q.id for q in DepartmentsModel.objects.get(id=1).questions.all()]
+        print(selected)
+        return render(request, self.template, {'obj': obj,
+                                               'questions': questions,
+                                               'selected': selected})
