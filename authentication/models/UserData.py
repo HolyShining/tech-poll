@@ -2,8 +2,6 @@ from django.db import models
 from django.conf import settings
 
 
-# Create your models here.
-
 class UserData(models.Model):
     class Meta:
         db_table = 'user_data'
@@ -16,18 +14,3 @@ class UserData(models.Model):
 
     def __str__(self):
         return '{name} {surname}'.format(name=self.name, surname=self.surname).title()
-
-
-class PermissionsModel(models.Model):
-    class Meta:
-        db_table = "permissions"
-
-    code_name = models.CharField(max_length=60, default="null")
-
-
-class RolesModel(models.Model):
-    class Meta:
-        db_table = "roles"
-
-    name = models.CharField(max_length=60, default="null")
-    permissions = models.ManyToManyField('PermissionsModel')
