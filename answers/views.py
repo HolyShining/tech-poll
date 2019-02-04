@@ -1,6 +1,6 @@
 import json
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.generic.base import View
 from .models import AnswersModel
 from actions.models import QuestionsModel
@@ -27,6 +27,7 @@ class AnswersView(View):
             query_list.append(ans)
 
         if query_list:
+            pass
             AnswersModel.objects.bulk_create(query_list)
 
         return HttpResponse('Success! JSON received and answers saved.')

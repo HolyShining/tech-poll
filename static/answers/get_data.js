@@ -93,9 +93,6 @@ function render_questions(id, name, stage, current_id){
     return element;
 }
 
-function saveAnswer() {
-}
-
 function nextPage() {
     const formData = $('form').serializeArray();
             for(index=1; index<formData.length; index+=2){
@@ -114,7 +111,6 @@ function nextPage() {
 }
 
 function submitData() {
-    // saveAnswer();
     let finalObj = {};
     for (i=0; i<json_data.questions.length; i++){
         finalObj[json_data.questions[i].name] = {
