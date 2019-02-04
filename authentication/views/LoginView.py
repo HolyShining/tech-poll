@@ -7,7 +7,6 @@ from django.views.generic import View
 class LoginView(View):
     def post(self, request):
         user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
-        print(user)
         if user is not None:
             auth.login(request, user)
             return redirect('auth-routing')
