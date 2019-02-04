@@ -1,26 +1,36 @@
+var initialLoad = true;
 json_data = null;
+section = null;
+page_id = null;
+stage_id = null;
+stages_count = null;
 
 window.fetch('/api/questions')
     .then(function(response){
         return response.json();
     }).then(function(json){
-    push_data(json);
     json_data = json;
+    filldata();
+    push_data(json);
 });
-
-var initialLoad = true;
 
 $(document).ready(function() {
     console.log('load');
-    page_id = 1;
-    stage_id = 'Engineering Management';
     initialLoad = false;
 });
 
-// if (sessionStorage.getItem('pageID') && sessionStorage.getItem('stageID')) {
-//     page_id = sessionStorage.getItem('pageID');
-//     stage_id = sessionStorage.getItem('stageID');
-// }
+function filldata() {
+    if (sessionStorage.getItem('pageID') && sessionStorage.getItem('stageID')) {
+        section = 'Activity';
+        page_id = sessionStorage.getItem('pageID');
+        stage_id = sessionStorage.getItem('stageID');
+    } else {
+        section = 'Activity';
+        page_id = 1;
+        stage_id = json_data.stages[page_id - 1].name;
+        stages_count = json_data.stages.length;
+    }
+}
 
 function push_data(json){
     clearData();
@@ -83,22 +93,49 @@ function render_questions(id, name, stage, current_id){
     return element;
 }
 
-function submitted() {
+function saveAnswer() {
+}
+
+function nextPage() {
     const formData = $('form').serializeArray();
-    console.log(formData);
-    for(index=1; index<formData.length; index+=2){
-        console.log(formData[index].name, formData[index].value);
+            for(index=1; index<formData.length; index+=2){
         sessionStorage.setItem(formData[index].name, formData[index].value);
-        console.log(formData[index+1].name, formData[index+1].value);
         sessionStorage.setItem(formData[index+1].name, formData[index+1].value);
     }
+    console.log(formData);
+    // saveAnswer();
     page_id += 1;
-    stage_id = 'Requirements';
+    if (page_id == stages_count){
+        document.querySelector('#next').setAttribute("value", "Finish");
+        document.querySelector('#next').setAttribute("onclick", "submitData();");
+    }
+    stage_id = json_data.stages[page_id-1].name;
     push_data(json_data);
+}
+
+function submitData() {
+    // saveAnswer();
+    let finalObj = {};
+    for (i=0; i<json_data.questions.length; i++){
+        finalObj[json_data.questions[i].name] = {
+            'Like to do': sessionStorage.getItem(json_data.questions[i].name+'_l'),
+            'Self-estimate': sessionStorage.getItem(json_data.questions[i].name+'_g'),
+        }
+    }
+
+    var http = new XMLHttpRequest();
+    var url = '/answers/';
+    var csrfToken = document.cookie.replace('csrftoken=', '');;
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'text');
+    http.setRequestHeader('csrfmiddlewaretoken', csrfToken);
+
+
+    http.send(JSON.stringify(finalObj));
+    console.log(JSON.stringify(finalObj));
 }
 
 function clearData(){
     document.querySelector('#question-holder').innerHTML = '';
     document.querySelector('.md-stepper-horizontal').innerHTML = '';
 }
-
