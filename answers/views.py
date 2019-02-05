@@ -27,7 +27,6 @@ class AnswersView(View):
             query_list.append(ans)
 
         if query_list:
-            pass
             AnswersModel.objects.bulk_create(query_list)
 
         return HttpResponse('Success! JSON received and answers saved.')

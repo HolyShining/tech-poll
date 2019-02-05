@@ -4,6 +4,7 @@ section = null;
 page_id = null;
 stage_id = null;
 stages_count = null;
+answered = [];
 
 window.fetch('/api/questions')
     .then(function(response){
@@ -15,7 +16,6 @@ window.fetch('/api/questions')
 });
 
 $(document).ready(function() {
-    console.log('load');
     initialLoad = false;
 });
 
@@ -30,6 +30,12 @@ function filldata() {
         stage_id = json_data.stages[page_id - 1].name;
         stages_count = json_data.stages.length;
     }
+}
+
+function load_page(page){
+    page_id = page;
+    stage_id = json_data.stages[page_id - 1].name;
+    push_data(json_data);
 }
 
 function push_data(json){
@@ -49,7 +55,7 @@ function push_data(json){
 
 function render_stages(id, name, current_id){
     let isActive = '';
-    if (id<=current_id){
+    if (id == current_id || answered.includes(id)){
         isActive = "active";
     }
     else{
@@ -57,6 +63,7 @@ function render_stages(id, name, current_id){
     }
     const element = "            <div class=\"md-step "+isActive+"\">\n" +
         "        <div class=\"md-step-circle\"><span>"+id+"</span></div>\n" +
+        "<a href=\"#\" onclick=\"load_page("+id+");\">"+
         "        <div class=\"md-step-title\">"+name+"</div>\n" +
         "    <div class=\"md-step-bar-left\"></div>\n" +
         "    <div class=\"md-step-bar-right\"></div>\n" +
@@ -99,8 +106,7 @@ function nextPage() {
         sessionStorage.setItem(formData[index].name, formData[index].value);
         sessionStorage.setItem(formData[index+1].name, formData[index+1].value);
     }
-    console.log(formData);
-    // saveAnswer();
+    answered.push(page_id);
     page_id += 1;
     if (page_id == stages_count){
         document.querySelector('#next').setAttribute("value", "Finish");
