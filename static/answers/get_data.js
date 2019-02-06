@@ -17,6 +17,7 @@ window.fetch($('#get_data').attr("api"))
 
 $(document).ready(function() {
     initialLoad = false;
+    // $('#previous').attr('disabled', true);
 });
 
 function filldata() {
@@ -51,6 +52,11 @@ function push_data(json){
                 json.questions[number].stages,
                 json.questions[number].hint,
                 stage_id);
+    }
+    if (page_id === 1){
+        $('#previous').attr('disabled', true);
+    } else {
+        $('#previous').attr('disabled', false);
     }
 }
 
@@ -113,6 +119,24 @@ function nextPage() {
         document.querySelector('#next').setAttribute("value", "Finish");
         document.querySelector('#next').setAttribute("onclick", "submitData();");
     }
+    stage_id = json_data.stages[page_id-1].name;
+    push_data(json_data);
+}
+
+function previousPage() {
+    const formData = $('form').serializeArray();
+    for (index = 1; index < formData.length; index += 2) {
+        try {
+            sessionStorage.setItem(formData[index].name, formData[index].value);
+            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+        }
+        catch (e) {
+            sessionStorage.setItem(formData[index].name, 'None');
+            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+        }
+    }
+    answered.push(page_id);
+    page_id -= 1;
     stage_id = json_data.stages[page_id-1].name;
     push_data(json_data);
 }
