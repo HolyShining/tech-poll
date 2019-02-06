@@ -1,0 +1,62 @@
+{% extends 'application/_layout.html' %}
+
+{% block content %}
+  {% if error %}
+    {{ error }}
+    <br/>
+    <br/>
+  {% endif %}
+  <div class="container">
+    <h1>Create a Section</h1>
+    <form method="POST" action="">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="selected_user">User:</label>
+          <select class="custom-select my-1 mr-sm-2" id="user" name="selected_user">
+            {% if obj %}
+              {% for user_d in users %}
+                <option value="{{ user_d.pk }}"
+                  {% if obj.f_section_id == section.pk %}
+                        selected
+                  {% endif %}>{{ user_d }}</option>
+              {% endfor %}
+            {% else %}
+              {% for user_d in users %}
+                <option value="{{ user_d.pk }}">{{ user_d }}</option>
+              {% endfor %}
+            {% endif %}
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="department">Department:</label>
+          <select class="custom-select my-1 mr-sm-2" id="department" name="department">
+            {% if obj %}
+              {% for department in departments %}
+                <option value="{{ department.pk }}"
+                  {% if obj.f_section_section.pk %}
+                        selected
+                  {% endif %}>{{ department }}</option>
+              {% endfor %}
+            {% else %}
+              {% for department in departments %}
+                <option value="{{ department.pk }}">{{ department }}</option>
+              {% endfor %}
+            {% endif %}
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <input type=button class="btn btn-lg btn-secondary btn-block" onClick="history.go(-1);"
+                 value="Go back">
+        </div>
+        <div class="form-group col-md-3">
+          <button type="submit" class="btn btn-lg btn-secondary btn-block">Create Section</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

@@ -7,8 +7,9 @@ from actions.models import QuestionsModel
 
 
 class AnswersView(View):
-    def get(self, request):
-        return render(request, 'answers/answers.html')
+    def get(self, request, department_id):
+        api_link = '/api/questions/{}'.format(str(department_id))
+        return render(request, 'answers/answers.html', {'api_link': api_link})
 
     def post(self, request):
         json_string = str(request.body.decode('UTF-8'))
@@ -18,7 +19,7 @@ class AnswersView(View):
         for question in answers:
             ans = AnswersModel()
             ans.f_question = QuestionsModel.objects.get(name=question)
-            ans.f_user_id = 28
+            ans.f_user_id = request.user.id
             if answers[ans.f_question.name]['Like to do'] == 'Yes':
                 ans.answers_like = True
             else:

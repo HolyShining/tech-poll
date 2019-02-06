@@ -6,7 +6,7 @@ stage_id = null;
 stages_count = null;
 answered = [];
 
-window.fetch('/api/questions')
+window.fetch($('#get_data').attr("api"))
     .then(function(response){
         return response.json();
     }).then(function(json){
@@ -49,19 +49,13 @@ function push_data(json){
             render_questions(number,
                 json.questions[number].name,
                 json.questions[number].stages,
+                json.questions[number].hint,
                 stage_id);
     }
 }
 
 function render_stages(id, name, current_id){
-    let isActive = '';
-    if (id == current_id || answered.includes(id)){
-        isActive = "active";
-    }
-    else{
-        isActive = "";
-    }
-    const element = "            <div class=\"md-step "+isActive+"\">\n" +
+    const element = "            <div class=\"md-step\">\n" +
         "        <div class=\"md-step-circle\"><span>"+id+"</span></div>\n" +
         "<a href=\"#\" onclick=\"load_page("+id+");\">"+
         "        <div class=\"md-step-title\">"+name+"</div>\n" +
@@ -74,26 +68,27 @@ function render_stages(id, name, current_id){
     return element;
 }
 
-function render_questions(id, name, stage, current_id){
+function render_questions(id, name, stage, hint, current_id){
     if (stage != current_id){
         return '';
     }
-    const element = "            <tr>\n" +
-        "                <td>"+ name +"</td>\n" +
+
+    const element = "<tr>\n" +
+        "                <td data-toggle=\"tooltip\" title=\""+ hint +"\">"+ name +"</td>\n" +
         "                <td><div class=\"btn-group btn-group-toggle\" data-toggle=\"buttons\">\n" +
-        "                    <label class=\"btn btn-light\">\n" +
-        "                        <input type=\"radio\" name=\""+name+"_l\" value=\"Yes\"> l\n" +
+        "                    <label class=\"btn btn-light "+ (sessionStorage.getItem(name+'_l') === 'Yes' && 'active')  +"\">\n" +
+        "                        <input type=\"radio\" name=\""+name+"_l\" value=\"Yes\""+ (sessionStorage.getItem(name+'_l') === 'Yes' && 'checked') +"> l\n" +
         "                    </label>\n" +
-        "                    <label class=\"btn btn-light\">\n" +
-        "                        <input type=\"radio\" name=\""+name+"_l\" value=\"No\"> 0\n" +
+        "                    <label class=\"btn btn-light "+ (sessionStorage.getItem(name+'_l') === 'No' && 'active') +"\">\n" +
+        "                        <input type=\"radio\" name=\""+name+"_l\" value=\"No\""+ (sessionStorage.getItem(name+'_l') === 'No' && 'checked')  +"> 0\n" +
         "                    </label>\n" +
         "                </div></td>\n" +
         "                <td><div class=\"dropdown\">\n" +
-        "                    <select class=\"custom-select\" name=\""+name+"_g\">\n" +
-        "                        <option class=\"dropdown-item\" value=\"None\">None</option>\n" +
-        "                        <option class=\"dropdown-item\" value=\"Beginner\">Beginner</option>\n" +
-        "                        <option class=\"dropdown-item\" value=\"Intermediate\">Intermediate</option>\n" +
-        "                        <option class=\"dropdown-item\" value=\"Master\">Master</option>\n" +
+        "                    <select class=\"custom-select\" name=\""+name+"_g\"\">\n" +
+        "                        <option class=\"dropdown-item\" value=\"None\""+ (sessionStorage.getItem(name+'_g') === 'None' && 'selected') +">None</option>\n" +
+        "                        <option class=\"dropdown-item\" value=\"Beginner\""+ (sessionStorage.getItem(name+'_g') === 'Beginner' && 'selected') +">Beginner</option>\n" +
+        "                        <option class=\"dropdown-item\" value=\"Intermediate\""+ (sessionStorage.getItem(name+'_g') === 'Intermediate' && 'selected') +">Intermediate</option>\n" +
+        "                        <option class=\"dropdown-item\" value=\"Master\""+ (sessionStorage.getItem(name+'_g') === 'Master' && 'selected') +">Master</option>\n" +
         "                    </select>\n" +
         "                </div></td>\n" +
         "            </tr>";
@@ -102,13 +97,19 @@ function render_questions(id, name, stage, current_id){
 
 function nextPage() {
     const formData = $('form').serializeArray();
-            for(index=1; index<formData.length; index+=2){
-        sessionStorage.setItem(formData[index].name, formData[index].value);
-        sessionStorage.setItem(formData[index+1].name, formData[index+1].value);
+    for (index = 1; index < formData.length; index += 2) {
+        try {
+            sessionStorage.setItem(formData[index].name, formData[index].value);
+            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+        }
+        catch (e) {
+            sessionStorage.setItem(formData[index].name, 'None');
+            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+        }
     }
     answered.push(page_id);
     page_id += 1;
-    if (page_id == stages_count){
+    if (answered.length == stages_count-2){
         document.querySelector('#next').setAttribute("value", "Finish");
         document.querySelector('#next').setAttribute("onclick", "submitData();");
     }
@@ -119,15 +120,18 @@ function nextPage() {
 function submitData() {
     let finalObj = {};
     for (i=0; i<json_data.questions.length; i++){
+        if (sessionStorage.getItem(json_data.questions[i].name+'_l') == null){
+            sessionStorage.setItem(json_data.questions[i].name+'_l', 'None');
+        }
         finalObj[json_data.questions[i].name] = {
             'Like to do': sessionStorage.getItem(json_data.questions[i].name+'_l'),
             'Self-estimate': sessionStorage.getItem(json_data.questions[i].name+'_g'),
         }
     }
 
-    var http = new XMLHttpRequest();
-    var url = '/answers/';
-    var csrfToken = document.cookie.replace('csrftoken=', '');;
+    let http = new XMLHttpRequest();
+    let url = '/answers/';
+    let csrfToken = document.cookie.replace('csrftoken=', '');
     http.open('POST', url, true);
     http.setRequestHeader('Content-type', 'text');
     http.setRequestHeader('csrfmiddlewaretoken', csrfToken);
@@ -135,6 +139,7 @@ function submitData() {
 
     http.send(JSON.stringify(finalObj));
     console.log(JSON.stringify(finalObj));
+    window.location.href = "/dash/user";
 }
 
 function clearData(){

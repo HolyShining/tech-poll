@@ -16,7 +16,6 @@
   </div>
   <div class="container">
     <form action="">
-{#      {% csrf_token %}#}
       <table class="table">
         <thead class="thead-dark">
         <tr>
@@ -32,5 +31,10 @@
       <input type="button" class="btn btn-secondary float-right text-right" id="next" onclick="nextPage();" value="Next">
     </form>
   </div>
-  <script src="{% static 'answers/get_data.js' %}"></script>
+  <script src="{% static 'answers/get_data.js' %}" id="get_data" api="{{ api_link }}"></script>
+  <script>
+      $(document).ready(function(){
+          $('[data-toggle="tooltip"]').tooltip();
+      });
+  </script>
 {% endblock %}

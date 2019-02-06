@@ -14,7 +14,7 @@
     <h5 class="card-title">{{ d.name }}</h5>
     <h6 class="card-subtitle mb-2 text-muted">Test Available</h6>
     <p class="card-text">Some questions about activities upon development process and hard skills</p>
-    <a href="{% url 'answers' %}" class="card-link">Start poll</a>
+    <a href="{% url 'answers' department_id=d.id %}" class="card-link">Start poll</a>
   </div>
 </div>
   {% endfor %}
