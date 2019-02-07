@@ -73,6 +73,7 @@ function push_data(json){
     } else {
         $('#previous').attr('disabled', false);
     }
+    console.log(render_select('Python'));
 }
 
 function render_stages(id, name, current_section){
@@ -112,16 +113,25 @@ function render_questions(id, name, stage, hint, current_id){
         "                    </label>\n" +
         "                </div></td>\n" +
         "                <td><div class=\"dropdown\">\n" +
-        "                    <select class=\"custom-select\" name=\""+name+"_g\"\">\n" +
-        "                        <option class=\"dropdown-item\" value=\"None\""+ (sessionStorage.getItem(name+'_g') === 'None' && 'selected') +">None</option>\n" +
-        "                        <option class=\"dropdown-item\" value=\"Beginner\""+ (sessionStorage.getItem(name+'_g') === 'Beginner' && 'selected') +">Beginner</option>\n" +
-        "                        <option class=\"dropdown-item\" value=\"Intermediate\""+ (sessionStorage.getItem(name+'_g') === 'Intermediate' && 'selected') +">Intermediate</option>\n" +
-        "                        <option class=\"dropdown-item\" value=\"Master\""+ (sessionStorage.getItem(name+'_g') === 'Master' && 'selected') +">Master</option>\n" +
-        "                    </select>\n" +
+                         render_select(name)+
         "                </div></td>\n" +
         "            </tr>";
     questions_here += 1;
     return element;
+}
+
+function render_select(name){
+        let element ="                    <select class=\"custom-select\" name=\""+name+"_g\"\">\n";
+        let options = '';
+        for (grade = 0;grade<json_data.grades.length; grade++){
+            options += "<option class=\"dropdown-item\" value=\""+
+                json_data.grades[grade].name +
+                "\""+ (sessionStorage.getItem(name+'_g') === json_data.grades[grade].name && 'selected') +">" +
+                json_data.grades[grade].name +
+                "</option>\n";
+        }
+        let ending = "</select>\n";
+        return element + options + ending;
 }
 
 function nextPage() {
@@ -185,15 +195,16 @@ function submitData() {
     }
 
     let http = new XMLHttpRequest();
-    let url = '/answers/';
+    let url = '/answers/1';
     let csrfToken = document.cookie.replace('csrftoken=', '');
     http.open('POST', url, true);
     http.setRequestHeader('Content-type', 'text');
     http.setRequestHeader('csrfmiddlewaretoken', csrfToken);
 
 
+    console.log(JSON.stringify(finalObj));
     http.send(JSON.stringify(finalObj));
-    window.location.href = "/dash/user";
+    // window.location.href = "/dash/user";
 }
 
 function clearData(){

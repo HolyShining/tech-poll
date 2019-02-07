@@ -1,7 +1,6 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.generic import View
-from django.shortcuts import render, redirect
-from actions.models import QuestionsModel, DepartmentsModel, SectionsModel, StagesModel
+from actions.models import QuestionsModel, DepartmentsModel, SectionsModel, StagesModel, GradesModel
 
 
 class DepartmentResponse(View):
@@ -12,12 +11,16 @@ class DepartmentResponse(View):
             return HttpResponse('Department not found')
         result = {'department': dep.name,
                   'questions': list(),
+                  'grades': list(),
                   'stages': list(),
                   'sections': list()}
 
+        for grade in list(GradesModel.objects.all()):
+            result['grades'].append({'name': grade.name})
+
         print(request.user.id)
         for question in list(dep.questions.all()):
-            result['questions'].append({'name': question.name, 'stages': question.f_stage.name, 'hint':question.hint})
+            result['questions'].append({'name': question.name, 'stages': question.f_stage.name, 'hint': question.hint})
             result['stages'].append({'name': question.f_stage.name, 'section': question.f_stage.f_section.name})
             result['sections'].append({'name': question.f_stage.f_section.name})
 
