@@ -1,13 +1,7 @@
 {% extends 'application/_layout.html' %}
 
 {% block content %}
-  {% if error %}
-    {{ error }}
-    <br/>
-    <br/>
-  {% endif %}
   <div class="container">
-    <h1>Logged as user</h1>
     {% for d in departments %}
   <div class="card" style="width: 18rem;">
   <div class="card-body">
@@ -18,5 +12,8 @@
   </div>
 </div>
   {% endfor %}
+  {% if msg %}
+    <h1 class="text-center">Unfortunately you haven't any courses yet...</h1>
+  {% endif %}
   </div>
 {% endblock %}

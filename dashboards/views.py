@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from django.shortcuts import render
 from django.contrib.messages import get_messages
 from actions.models import DepartmentsModel
@@ -24,6 +25,8 @@ class UserView(View):
     @user_role_required
     def get(self, request):
         departments = UserData.objects.get(f_auth_id=request.user.id).departmentsmodel_set.all()
+        if not departments:
+            return render(request, 'dashboards/user_dashboard.html', {'msg': True})
         messages = get_messages(request)
         view_message = None
         for message in messages:

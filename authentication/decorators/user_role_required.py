@@ -11,7 +11,9 @@ def user_role_required(function):
             if UserData.objects.get(f_auth_id=request.user.id).f_role.name == 'User' or \
                     UserData.objects.get(f_auth_id=request.user.id).f_role.name == 'Admin':
                 return function(self, request, *args, **kwargs)
-        finally:
+            else:
+                return redirect('auth-routing')
+        except UserData.DoesNotExist:
             return redirect('home-page')
 
     return wrapper

@@ -5,4 +5,6 @@ class PermissionsModel(models.Model):
     class Meta:
         db_table = "permissions"
 
-    code_name = models.CharField(max_length=60, default="null")
+    name = models.CharField(max_length=100, default='No name')
+    code_name = models.CharField(max_length=100, default='No codename')
+
