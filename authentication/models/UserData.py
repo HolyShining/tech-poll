@@ -5,7 +5,7 @@ from django.conf import settings
 class UserData(models.Model):
     class Meta:
         db_table = 'user_data'
-        ordering = ['id']
+        ordering = ['name', 'surname', 'id']
 
     name = models.CharField(max_length=32)
     surname = models.CharField(max_length=32)
