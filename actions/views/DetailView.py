@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from actions.models import SectionsModel, StagesModel, QuestionsModel, DepartmentsModel
+from actions.models import SectionsModel, StagesModel, QuestionsModel, DepartmentsModel, GradesModel
 from django.views.generic import View
 from django.contrib import messages
 
@@ -80,3 +80,15 @@ class DepartmentsDetailView(DetailView):
         return render(request, self.template, {'obj': obj,
                                                'questions': questions,
                                                'selected': selected})
+
+
+class GradeDetailView(DetailView):
+    model = GradesModel
+    template = 'actions/form_grade.html'
+
+    def post(self, request, object_id):
+        grade = get_object_or_404(GradesModel, pk=object_id)
+        grade.name = request.POST['name']
+        grade.save()
+        messages.add_message(request, messages.SUCCESS, 'Section updated successfully')
+        return redirect('auth-routing')

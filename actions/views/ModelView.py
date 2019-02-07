@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
-from actions.models import SectionsModel, StagesModel, QuestionsModel, DepartmentsModel
+from actions.models import SectionsModel, StagesModel, QuestionsModel, DepartmentsModel, GradesModel
 
 
 class ModelView(View):
@@ -38,3 +38,9 @@ class DepartmentsView(ModelView):
     model = DepartmentsModel
     name = "Departments"
     edit = 'edit-department'
+
+
+class GradesView(ModelView):
+    model = GradesModel
+    name = "Grades"
+    edit = 'edit-grade'

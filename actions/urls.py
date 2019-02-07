@@ -19,4 +19,7 @@ urlpatterns = [
     path('load/sections', views.SectionLoadFile.as_view(), name='load-sections-file'),
     path('load/stages', views.StageLoadFile.as_view(), name='load-stage-file'),
     path('load/questions', views.QuestionLoadFile.as_view(), name='load-question-file'),
+    path('grades/', views.GradesView.as_view(), name='grades'),
+    path('grade/new', views.CreateGradeView.as_view(), name='create-grade-view'),
+    path('grade/edit/<int:object_id>', views.GradeDetailView.as_view(), name='edit-grade'),
 ]

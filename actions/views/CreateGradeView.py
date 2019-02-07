@@ -2,18 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from django.views.generic import View
-from actions.models import SectionsModel
+from actions.models import GradesModel
 
 
-class CreateSectionView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'actions/form_sections.html')
+class CreateGradeView(View):
+    def get(self, request):
+        return render(request, 'actions/form_grade.html')
 
     def post(self, request):
-        section = SectionsModel(name=request.POST['name'])
-        print(section)
+        grade = GradesModel(name=request.POST['name'])
+        print(grade)
         messages.add_message(request,
                              messages.SUCCESS,
-                             'Section "{}" created successfully!'.format(section.name))
-        section.save()
+                             'Section "{}" created successfully!'.format(grade.name))
+        grade.save()
         return redirect('auth-routing')
