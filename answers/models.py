@@ -8,6 +8,7 @@ from actions.models import QuestionsModel, GradesModel
 class AnswersModel(models.Model):
     class Meta:
         db_table = "answers"
+        ordering = ['id']
 
     f_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, related_name='f_user')
     f_question = models.ForeignKey(QuestionsModel, on_delete=models.DO_NOTHING)

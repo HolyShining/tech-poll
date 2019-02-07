@@ -5,6 +5,7 @@ from authentication.models import UserData
 class DepartmentsModel(models.Model):
     class Meta:
         db_table = "departments"
+        ordering = ['id']
 
     name = models.CharField(max_length=100, default=None)
     questions = models.ManyToManyField('QuestionsModel')
