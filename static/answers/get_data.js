@@ -17,7 +17,6 @@ window.fetch($('#get_data').attr("api"))
 
 $(document).ready(function() {
     initialLoad = false;
-    // $('#previous').attr('disabled', true);
 });
 
 function filldata() {

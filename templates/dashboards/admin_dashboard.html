@@ -28,21 +28,21 @@
       <h4>&nbsp;|&nbsp;</h4>
             <a href="{% url 'questions' %}"><h4>Show Questions</h4></a>
       <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'load-file' mode='question' %}"><h4>Load from file</h4></a>
+      <a href="{% url 'load-question-file' %}"><h4>Load from file</h4></a>
     </div>
     <div class="row">
       <a href="{% url 'create-stage' %}"><h4>Create a Stage</h4></a>
       <h4>&nbsp;|&nbsp;</h4>
             <a href="{% url 'stages' %}"><h4>Show Stages</h4></a>
       <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'load-file' mode='stage' %}"><h4>Load from file</h4></a>
+      <a href="{% url 'load-stage-file' %}"><h4>Load from file</h4></a>
     </div>
     <div class="row">
       <a href="{% url 'create-section' %}"><h4>Create a Section</h4></a>
       <h4>&nbsp;|&nbsp;</h4>
       <a href="{% url 'sections' %}"><h4>Show Sections</h4></a>
       <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'load-file' mode='section' %}"><h4>Load from file</h4></a>
+      <a href="{% url 'load-sections-file' %}"><h4>Load from file</h4></a>
     </div>
   </div>
 {% endblock %}

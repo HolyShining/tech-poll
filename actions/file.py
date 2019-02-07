@@ -2,6 +2,8 @@ import re
 
 
 def file_worker(file) -> list:
+    if file is None:
+        return []
     final_list = []
     for chunk in file.readlines():
         chunk = chunk.decode("utf-8")

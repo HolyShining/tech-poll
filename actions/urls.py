@@ -16,5 +16,7 @@ urlpatterns = [
     path('departments/adduser', views.AddUserToDepartment.as_view(), name='add-user-to-departments'),
     path('departments/new', views.CreateDepartmentsView.as_view(), name='create-department'),
     path('departments/edit/<int:object_id>', views.DepartmentsDetailView.as_view(), name='edit-department'),
-    path('load/<mode>', views.LoadFileView.as_view(), name='load-file')
+    path('load/sections', views.SectionLoadFile.as_view(), name='load-sections-file'),
+    path('load/stages', views.StageLoadFile.as_view(), name='load-stage-file'),
+    path('load/questions', views.QuestionLoadFile.as_view(), name='load-question-file'),
 ]
