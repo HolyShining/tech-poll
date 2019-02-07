@@ -5,6 +5,7 @@ page_id = null;
 stage_id = null;
 stages_count = null;
 answered = [];
+questions_here = 0;
 
 window.fetch($('#get_data').attr("api"))
     .then(function(response){
@@ -42,7 +43,7 @@ function push_data(json){
     clearData();
     for(number=0; number<json.stages.length; number++){
         document.querySelector('.md-stepper-horizontal').innerHTML +=
-        render_stages(number+1, json.stages[number].name, page_id);
+            render_stages(number+1, json.stages[number].name, section);
     }
     for(number=0; number<json.questions.length; number++){
         document.querySelector('#question-holder').innerHTML +=
@@ -52,6 +53,21 @@ function push_data(json){
                 json.questions[number].hint,
                 stage_id);
     }
+    let answer = 0;
+    $("input[name$='_l']").on("change", function(){
+        if($("input[name$='_l']").is(":checked") == true){
+            answer += 1;
+            if(questions_here == answer){
+                $("#"+page_id+".md-step").addClass('active');
+                if(!answered.includes(page_id)){
+                    answered.push(page_id);
+                }
+                if (page_id === stages_count && answered.length === stages_count){
+                    $('#finish').attr('disabled', false);
+                    $('#finish').tooltip('disable');
+                }
+            }
+        }});
     if (page_id === 1){
         $('#previous').attr('disabled', true);
     } else {
@@ -59,8 +75,15 @@ function push_data(json){
     }
 }
 
-function render_stages(id, name, current_id){
-    const element = "            <div class=\"md-step\">\n" +
+function render_stages(id, name, current_section){
+    if (section !== current_section){
+        return '';
+    }
+    let isActive = '';
+    if (answered.includes(id)){
+        isActive = 'active';
+    }
+    const element = "            <div class=\"md-step "+isActive+"\" id=\""+id+"\">\n" +
         "        <div class=\"md-step-circle\"><span>"+id+"</span></div>\n" +
         "<a href=\"#\" onclick=\"load_page("+id+");\">"+
         "        <div class=\"md-step-title\">"+name+"</div>\n" +
@@ -97,26 +120,35 @@ function render_questions(id, name, stage, hint, current_id){
         "                    </select>\n" +
         "                </div></td>\n" +
         "            </tr>";
+    questions_here += 1;
     return element;
 }
 
 function nextPage() {
     const formData = $('form').serializeArray();
-    for (index = 1; index < formData.length; index += 2) {
-        try {
-            sessionStorage.setItem(formData[index].name, formData[index].value);
-            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
-        }
-        catch (e) {
-            sessionStorage.setItem(formData[index].name, 'None');
-            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+    if (formData.length !== questions_here*2-1) {
+        for (index = 1; index < formData.length; index += 2) {
+            try {
+                sessionStorage.setItem(formData[index].name, formData[index].value);
+                sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+                if (!answered.includes(page_id)) {
+                    answered.push(page_id);
+                }
+            } catch (e) {
+                null;
+            }
         }
     }
-    answered.push(page_id);
     page_id += 1;
-    if (answered.length == stages_count-2){
+    if (page_id === stages_count){
         document.querySelector('#next').setAttribute("value", "Finish");
         document.querySelector('#next').setAttribute("onclick", "submitData();");
+        document.querySelector('#next').setAttribute("id", "finish");
+        document.querySelector('#finish').setAttribute("data-toggle", "tooltip");
+        document.querySelector('#finish').setAttribute("data-placement", "tooltip");
+        document.querySelector('#finish').setAttribute("title",
+            "Please, fill up all grey sections!");
+        $('#finish').attr('disabled', true);
     }
     stage_id = json_data.stages[page_id-1].name;
     push_data(json_data);
@@ -124,14 +156,14 @@ function nextPage() {
 
 function previousPage() {
     const formData = $('form').serializeArray();
+    console.log(formData);
     for (index = 1; index < formData.length; index += 2) {
         try {
             sessionStorage.setItem(formData[index].name, formData[index].value);
             sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
         }
         catch (e) {
-            sessionStorage.setItem(formData[index].name, 'None');
-            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+            null;
         }
     }
     answered.push(page_id);
@@ -161,11 +193,11 @@ function submitData() {
 
 
     http.send(JSON.stringify(finalObj));
-    console.log(JSON.stringify(finalObj));
     window.location.href = "/dash/user";
 }
 
 function clearData(){
     document.querySelector('#question-holder').innerHTML = '';
     document.querySelector('.md-stepper-horizontal').innerHTML = '';
+    questions_here = 0;
 }
