@@ -3,12 +3,15 @@ from django.shortcuts import render
 from django.views.generic import View
 from authentication import models
 from authentication.PasswordGenerator import get_password, randint
+from authentication.decorators import admin_role_required
 
 
 class SignUpView(View):
+    @admin_role_required
     def get(self, request, *args, **kwargs):
         return render(request, 'authentication/createuser.html', {})
 
+    @admin_role_required
     def post(self, request):
         usrname = request.POST['name'][:1] + request.POST['surname'][:4]
         pswrd = get_password(8)

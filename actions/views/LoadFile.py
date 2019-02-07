@@ -6,6 +6,7 @@ from django.views.generic.base import View
 from actions.file import file_worker
 from actions.models import SectionsModel
 from actions.interfaces import ISendMessage
+from authentication.decorators import admin_role_required
 
 
 class LoadFile(View, ISendMessage):
@@ -13,6 +14,7 @@ class LoadFile(View, ISendMessage):
     file = None
     _query_list = []
 
+    @admin_role_required
     def get(self, request):
         return render(request, 'actions/load_from_file.html')
 

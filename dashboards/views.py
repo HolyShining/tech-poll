@@ -2,13 +2,16 @@ from django.shortcuts import render
 from django.contrib.messages import get_messages
 from actions.models import DepartmentsModel
 from authentication.models import UserData
+from authentication.decorators import admin_role_required, user_role_required
 
 # Create your views here.
-from django.views.generic import TemplateView
+from django.views.generic import View
 
 
-class AdminView(TemplateView):
-    def get(self, request, *args, **kwargs):
+class AdminView(View):
+
+    @admin_role_required
+    def get(self, request):
         messages = get_messages(request)
         view_message = None
         for message in messages:
@@ -16,10 +19,11 @@ class AdminView(TemplateView):
         return render(request, 'dashboards/admin_dashboard.html', {'message': view_message})
 
 
-class UserView(TemplateView):
-    def get(self, request, *args, **kwargs):
+class UserView(View):
+
+    @user_role_required
+    def get(self, request):
         departments = UserData.objects.get(f_auth_id=request.user.id).departmentsmodel_set.all()
-        print(departments)
         messages = get_messages(request)
         view_message = None
         for message in messages:

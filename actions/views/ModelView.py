@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 
 from actions.models import SectionsModel, StagesModel, QuestionsModel, DepartmentsModel, GradesModel
+from authentication.decorators import admin_role_required
 
 
 class ModelView(View):
@@ -9,6 +10,7 @@ class ModelView(View):
     name = None
     edit = None
 
+    @admin_role_required
     def get(self, request, *args, **kwargs):
         obj = self.model.objects.all()
         return render(request, 'actions/model_view.html', {'objects': obj,

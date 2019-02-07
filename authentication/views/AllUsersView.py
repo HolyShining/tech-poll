@@ -1,13 +1,12 @@
 from django.views.generic import View
 from django.shortcuts import render
 from authentication import models
+from authentication.decorators import admin_role_required
 
 
 class AllUsersView(View):
+
+    @admin_role_required
     def get(self, request):
-        role = models.UserData.objects.get(f_auth_id=request.user.id).f_role.name
-        if role == 'Admin':
-            users = models.UserData.objects.all()
-        else:
-            users = models.UserData.objects.exclude(f_role__name='Admin')
+        users = models.UserData.objects.all()
         return render(request, 'authentication/all_users.html', {'users': users})

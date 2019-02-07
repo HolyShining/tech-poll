@@ -3,12 +3,15 @@ from django.contrib import messages
 
 from django.views.generic import View
 from actions.models import SectionsModel
+from authentication.decorators import admin_role_required
 
 
 class CreateSectionView(View):
+    @admin_role_required
     def get(self, request, *args, **kwargs):
         return render(request, 'actions/form_sections.html')
 
+    @admin_role_required
     def post(self, request):
         section = SectionsModel(name=request.POST['name'])
         print(section)

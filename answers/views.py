@@ -4,9 +4,11 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from .models import AnswersModel
 from actions.models import QuestionsModel, GradesModel
+from authentication.decorators import user_role_required
 
 
 class AnswersView(View):
+    @user_role_required
     def get(self, request, department_id):
         api_link = '/api/questions/{}'.format(str(department_id))
         return render(request, 'answers/answers.html', {'api_link': api_link})
@@ -26,7 +28,6 @@ class AnswersView(View):
                 ans.answers_like = False
             ans.f_grade_id = GradesModel.objects.filter(name=answers[ans.f_question.name]['Self-estimate']).first().id
             query_list.append(ans)
-            # print(ans.f_grade)
 
         print(query_list)
         if query_list:

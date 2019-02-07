@@ -3,9 +3,11 @@ from django.contrib import messages
 
 from django.views.generic import View
 from actions.models import GradesModel
+from authentication.decorators import admin_role_required
 
 
 class CreateGradeView(View):
+
     def get(self, request):
         return render(request, 'actions/form_grade.html')
 

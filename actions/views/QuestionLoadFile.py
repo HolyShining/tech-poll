@@ -3,9 +3,11 @@ from django.shortcuts import redirect
 
 from actions.models import QuestionsModel, StagesModel
 from actions.views import LoadFile
+from authentication.decorators import admin_role_required
 
 
 class QuestionLoadFile(LoadFile):
+    @admin_role_required
     def post(self, request):
         self.file = request.FILES['loaded_file']
         for line in self.get_file_context():
