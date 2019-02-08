@@ -10,8 +10,3 @@ class HomePageView(TemplateView):
         for message in messages:
             view_message = message
         return render(request, 'application/homepage.html', {'msg': view_message})
-
-
-class RedirectingView(TemplateView):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'application/redirecting.html', {})
