@@ -111,3 +111,23 @@ a:hover {
 .close:hover {
   color: #f0f8ff;
 }
+
+/* Toast window */
+
+.container-toast{
+  position: absolute;
+  display: inline;
+  min-height: 200px;
+  left: 20px;
+  top: 66px;
+}
+
+.toast{
+  background-color: rgba(139,0,0, 0.5);
+  color: #FFF;
+}
+
+.toast-header{
+  background-color: #333333;
+  color: #DDDDDD;
+}
