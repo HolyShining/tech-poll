@@ -18,8 +18,11 @@ class DepartmentResponse(View):
         for grade in list(GradesModel.objects.all()):
             result['grades'].append({'name': grade.name})
 
+        # for stage in list(StagesModel.objects.all()):
+        #     result['stages'].append({'section'})
+
         print(request.user.id)
-        for question in list(dep.questions.all()):
+        for question in list(dep.questions.order_by('id').all()):
             result['questions'].append({'name': question.name, 'stages': question.f_stage.name, 'hint': question.hint})
             result['stages'].append({'name': question.f_stage.name, 'section': question.f_stage.f_section.name})
             result['sections'].append({'name': question.f_stage.f_section.name})

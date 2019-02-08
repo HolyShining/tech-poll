@@ -26,7 +26,11 @@ class AnswersView(View):
                 ans.answers_like = True
             else:
                 ans.answers_like = False
-            ans.f_grade_id = GradesModel.objects.filter(name=answers[ans.f_question.name]['Self-estimate']).first().id
+
+            if answers[ans.f_question.name]['Self-estimate'] is None:
+                ans.f_grade_id = GradesModel.objects.get(name='None').id
+            else:
+                ans.f_grade_id = GradesModel.objects.get(name=answers[ans.f_question.name]['Self-estimate']).id
             query_list.append(ans)
 
         print(query_list)

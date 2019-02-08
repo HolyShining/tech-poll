@@ -4,15 +4,18 @@ section = null;
 page_id = null;
 stage_id = null;
 stages_count = null;
+answered_stages = [];
 answered = [];
 questions_here = 0;
+current_stages = [];
+section_id = 0;
 
 window.fetch($('#get_data').attr("api"))
     .then(function(response){
         return response.json();
     }).then(function(json){
     json_data = json;
-    filldata();
+    filldata(section_id);
     push_data(json);
 });
 
@@ -20,30 +23,39 @@ $(document).ready(function() {
     initialLoad = false;
 });
 
-function filldata() {
-    if (sessionStorage.getItem('pageID') && sessionStorage.getItem('stageID')) {
-        section = 'Activity';
-        page_id = sessionStorage.getItem('pageID');
-        stage_id = sessionStorage.getItem('stageID');
-    } else {
-        section = 'Activity';
-        page_id = 1;
-        stage_id = json_data.stages[page_id - 1].name;
-        stages_count = json_data.stages.length;
+function filldata(section_id) {
+    section = json_data.sections[section_id].name;
+    console.log(section);
+    page_id = 1;
+    for (let i = 0; i < json_data.stages.length; i++) {
+        if (json_data.stages[i].section === section){
+            current_stages.push({name: json_data.stages[i].name});
+        }
     }
+    console.log(current_stages);
+    stage_id = current_stages[page_id - 1].name;
+    stages_count = current_stages.length;
+    // }
 }
 
 function load_page(page){
     page_id = page;
-    stage_id = json_data.stages[page_id - 1].name;
+    stage_id = current_stages[page_id - 1].name;
     push_data(json_data);
+}
+function load_section(id){
+    section_id
 }
 
 function push_data(json){
     clearData();
-    for(number=0; number<json.stages.length; number++){
+    for (number=0; number<json.sections.length; number++){
+        document.querySelector('#sections').innerHTML +=
+            render_sections(number, json.sections[number].name);
+    }
+    for(number=0; number<current_stages.length; number++){
         document.querySelector('.md-stepper-horizontal').innerHTML +=
-            render_stages(number+1, json.stages[number].name, section);
+            render_stages(number+1, current_stages[number].name);
     }
     for(number=0; number<json.questions.length; number++){
         document.querySelector('#question-holder').innerHTML +=
@@ -73,13 +85,45 @@ function push_data(json){
     } else {
         $('#previous').attr('disabled', false);
     }
-    console.log(render_select('Python'));
+    if (answered_stages.length+1 === json_data.sections.length){
+        document.querySelector('#next').setAttribute("value", "Finish");
+        document.querySelector('#next').setAttribute("onclick", "submitData();");
+        document.querySelector('#next').setAttribute("id", "finish");
+        document.querySelector('#finish').setAttribute("data-toggle", "tooltip");
+        document.querySelector('#finish').setAttribute("data-placement", "tooltip");
+        document.querySelector('#finish').setAttribute("title",
+            "Please, fill up all grey sections!");
+        $('#finish').attr('disabled', true);
+    }
 }
 
-function render_stages(id, name, current_section){
-    if (section !== current_section){
-        return '';
+function getNumberOfStage(section){
+    return json_data.stages.filter(function (obj) {
+        return obj.section === section
+    }).length;
+}
+
+function render_sections(id, name) {
+    let count = 0;
+    if (!answered_stages.includes(id)) {
+        count = getNumberOfStage(name);
     }
+    if (section===name){
+        count = stages_count - answered.length;
+    }
+    let badge = "<span class=\"badge badge-pill bg-light align-text-bottom\">"+count+"</span>\n";
+    if (count < 1){
+        badge = '';
+    }
+    const element = "<a class=\"nav-link\" href=\"#\" onclick='load_page("+parseInt(id+1)+")'>\n" +
+        "            "+name+"\n" +
+        badge +
+        "        </a>";
+    return element;
+}
+
+
+function render_stages(id, name){
     let isActive = '';
     if (answered.includes(id)){
         isActive = 'active';
@@ -113,7 +157,7 @@ function render_questions(id, name, stage, hint, current_id){
         "                    </label>\n" +
         "                </div></td>\n" +
         "                <td><div class=\"dropdown\">\n" +
-                         render_select(name)+
+        render_select(name)+
         "                </div></td>\n" +
         "            </tr>";
     questions_here += 1;
@@ -121,17 +165,17 @@ function render_questions(id, name, stage, hint, current_id){
 }
 
 function render_select(name){
-        let element ="                    <select class=\"custom-select\" name=\""+name+"_g\"\">\n";
-        let options = '';
-        for (grade = 0;grade<json_data.grades.length; grade++){
-            options += "<option class=\"dropdown-item\" value=\""+
-                json_data.grades[grade].name +
-                "\""+ (sessionStorage.getItem(name+'_g') === json_data.grades[grade].name && 'selected') +">" +
-                json_data.grades[grade].name +
-                "</option>\n";
-        }
-        let ending = "</select>\n";
-        return element + options + ending;
+    let element ="                    <select class=\"custom-select\" name=\""+name+"_g\"\">\n";
+    let options = '';
+    for (grade = 0;grade<json_data.grades.length; grade++){
+        options += "<option class=\"dropdown-item\" value=\""+
+            json_data.grades[grade].name +
+            "\""+ (sessionStorage.getItem(name+'_g') === json_data.grades[grade].name && 'selected') +">" +
+            json_data.grades[grade].name +
+            "</option>\n";
+    }
+    let ending = "</select>\n";
+    return element + options + ending;
 }
 
 function nextPage() {
@@ -151,6 +195,10 @@ function nextPage() {
     }
     page_id += 1;
     if (page_id === stages_count){
+        document.querySelector('#next').setAttribute("value", "Next Section");
+        document.querySelector('#next').setAttribute("onclick", "nextStage();");
+    }
+    if (answered_stages.length+1 === json_data.sections.length){
         document.querySelector('#next').setAttribute("value", "Finish");
         document.querySelector('#next').setAttribute("onclick", "submitData();");
         document.querySelector('#next').setAttribute("id", "finish");
@@ -160,7 +208,7 @@ function nextPage() {
             "Please, fill up all grey sections!");
         $('#finish').attr('disabled', true);
     }
-    stage_id = json_data.stages[page_id-1].name;
+    stage_id = current_stages[page_id-1].name;
     push_data(json_data);
 }
 
@@ -178,12 +226,48 @@ function previousPage() {
     }
     answered.push(page_id);
     page_id -= 1;
-    stage_id = json_data.stages[page_id-1].name;
+    stage_id = current_stages[page_id-1].name;
+    push_data(json_data);
+}
+
+function nextStage() {
+    const formData = $('form').serializeArray();
+    if (formData.length !== questions_here*2-1) {
+        for (index = 1; index < formData.length; index += 2) {
+            try {
+                sessionStorage.setItem(formData[index].name, formData[index].value);
+                sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+                if (!answered.includes(page_id)) {
+                    answered.push(page_id);
+                }
+            } catch (e) {
+                null;
+            }
+        }
+    }
+    clearData();
+    current_stages = [];
+    answered_stages.push(section_id);
+    answered = [];
+    section_id += 1;
+    filldata(section_id);
     push_data(json_data);
 }
 
 function submitData() {
     let finalObj = {};
+    const formData = $('form').serializeArray();
+    console.log(formData);
+    for (index = 1; index < formData.length; index += 2) {
+        try {
+            sessionStorage.setItem(formData[index].name, formData[index].value);
+            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+        }
+        catch (e) {
+            null;
+        }
+    }
+
     for (i=0; i<json_data.questions.length; i++){
         if (sessionStorage.getItem(json_data.questions[i].name+'_l') == null){
             sessionStorage.setItem(json_data.questions[i].name+'_l', 'None');
@@ -201,13 +285,17 @@ function submitData() {
     http.setRequestHeader('Content-type', 'text');
     http.setRequestHeader('csrfmiddlewaretoken', csrfToken);
 
-
     console.log(JSON.stringify(finalObj));
     http.send(JSON.stringify(finalObj));
-    // window.location.href = "/dash/user";
+    http.onreadystatechange = function() {
+        if (http.readyState == XMLHttpRequest.DONE && http.status == 200) {
+            window.location.href = "/dash/user";
+        }
+    }
 }
 
 function clearData(){
+    document.querySelector('#sections').innerHTML = '';
     document.querySelector('#question-holder').innerHTML = '';
     document.querySelector('.md-stepper-horizontal').innerHTML = '';
     questions_here = 0;
