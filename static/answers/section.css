@@ -1,0 +1,11 @@
+.nav-underline{
+	background-color: #2e2e2e;
+	margin-top: 55px;
+}
+.nav-underline > .nav-link{
+	color: #b9b0b0;
+}
+.navbar-nav > .name, i{
+	color: #fff;
+	padding: 0px 10px;
+}
