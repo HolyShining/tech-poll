@@ -1,26 +1,10 @@
-"""techpoll URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.urls import path, include
 from actions.views import DepartmentResponse, UserAnswerResponse
 from . import views
 
 urlpatterns = [
     path('', views.HomePageView.as_view(), name='home-page'),
-    path('api/questions/<int:department_id>', DepartmentResponse.as_view(), name='response'),
-    path('api/answers/', UserAnswerResponse.as_view(), name='usr-ans'),
+    path('api/', include('api.urls')),
     path('users/', include('authentication.urls')),
     path('dash/', include('dashboards.urls')),
     path('answers/', include('answers.urls')),
