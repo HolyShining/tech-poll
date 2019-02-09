@@ -4,9 +4,9 @@ from actions.models import DepartmentsModel, GradesModel
 
 
 class QuestionsAPI(View):
-    def get(self, request, department_id):
+    def get(self, request, department):
         try:
-            dep = DepartmentsModel.objects.get(id=department_id)
+            dep = DepartmentsModel.objects.get(name__iexact=department)
         except DepartmentsModel.DoesNotExist:
             return HttpResponse('Department not found')
         result = {'department': dep.name,
@@ -19,7 +19,7 @@ class QuestionsAPI(View):
             result['grades'].append({'name': grade.name})
 
         print(request.user.id)
-        for question in list(dep.questions.order_by('id').all()):
+        for question in list(dep.questions.order_by('-id').all()):
             result['questions'].append({'name': question.name, 'stages': question.f_stage.name, 'hint': question.hint})
             result['stages'].append({'name': question.f_stage.name, 'section': question.f_stage.f_section.name})
             result['sections'].append({'name': question.f_stage.f_section.name})

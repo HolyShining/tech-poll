@@ -1,4 +1,5 @@
 var initialLoad = true;
+all_stages = {};
 json_data = null;
 section = null;
 page_id = null;
@@ -25,17 +26,14 @@ $(document).ready(function() {
 
 function filldata(section_id) {
     section = json_data.sections[section_id].name;
-    console.log(section);
     page_id = 1;
     for (let i = 0; i < json_data.stages.length; i++) {
         if (json_data.stages[i].section === section){
             current_stages.push({name: json_data.stages[i].name});
         }
     }
-    console.log(current_stages);
     stage_id = current_stages[page_id - 1].name;
     stages_count = current_stages.length;
-    // }
 }
 
 function load_page(page){
@@ -43,8 +41,26 @@ function load_page(page){
     stage_id = current_stages[page_id - 1].name;
     push_data(json_data);
 }
+
 function load_section(id){
-    section_id
+    all_stages[section] = answered;
+    section = json_data.sections[id].name;
+
+    if (section in all_stages){
+        answered = all_stages[section];
+    } else {
+        answered = [];
+    }
+    page_id = 1;
+    current_stages = [];
+    for (let i = 0; i < json_data.stages.length; i++) {
+        if (json_data.stages[i].section === section){
+            current_stages.push({name: json_data.stages[i].name});
+        }
+    }
+    stage_id = current_stages[page_id - 1].name;
+    stages_count = current_stages.length;
+    load_page(1);
 }
 
 function push_data(json){
@@ -74,9 +90,28 @@ function push_data(json){
                 if(!answered.includes(page_id)){
                     answered.push(page_id);
                 }
+                const formData = $('form').serializeArray();
+                if (formData.length !== questions_here*2-1) {
+                    for (index = 1; index < formData.length; index += 2) {
+                        try {
+                            sessionStorage.setItem(formData[index].name, formData[index].value);
+                            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+                            if (!answered.includes(page_id)) {
+                                answered.push(page_id);
+                            }
+                        } catch (e) {
+                            null;
+                        }
+                    }
+                }
                 if (page_id === stages_count && answered.length === stages_count){
                     $('#finish').attr('disabled', false);
                     $('#finish').tooltip('disable');
+                }
+                console.log(answered.length, current_stages.length);
+                if (answered.length === current_stages.length){
+                    document.querySelector('#next').setAttribute("value", "Next Section");
+                    document.querySelector('#next').setAttribute("onclick", "nextSection();");
                 }
             }
         }});
@@ -84,6 +119,15 @@ function push_data(json){
         $('#previous').attr('disabled', true);
     } else {
         $('#previous').attr('disabled', false);
+    }
+    console.log(answered);
+
+    if (page_id === current_stages.length || answered.length === current_stages.length){
+        document.querySelector('#next').setAttribute("value", "Next Section");
+        document.querySelector('#next').setAttribute("onclick", "nextSection();");
+    } else {
+        document.querySelector('#next').setAttribute("value", "Next");
+        document.querySelector('#next').setAttribute("onclick", "nextPage();");
     }
     if (answered_stages.length+1 === json_data.sections.length){
         document.querySelector('#next').setAttribute("value", "Finish");
@@ -95,6 +139,16 @@ function push_data(json){
             "Please, fill up all grey sections!");
         $('#finish').attr('disabled', true);
     }
+    // if (answered_stages.length+1 === json_data.sections.length){
+    //     document.querySelector('#next').setAttribute("value", "Finish");
+    //     document.querySelector('#next').setAttribute("onclick", "submitData();");
+    //     document.querySelector('#next').setAttribute("id", "finish");
+    //     document.querySelector('#finish').setAttribute("data-toggle", "tooltip");
+    //     document.querySelector('#finish').setAttribute("data-placement", "tooltip");
+    //     document.querySelector('#finish').setAttribute("title",
+    //         "Please, fill up all grey sections!");
+    //     $('#finish').attr('disabled', true);
+    // }
 }
 
 function getNumberOfStage(section){
@@ -115,7 +169,7 @@ function render_sections(id, name) {
     if (count < 1){
         badge = '';
     }
-    const element = "<a class=\"nav-link\" href=\"#\" onclick='load_page("+parseInt(id+1)+")'>\n" +
+    const element = "<a class=\"nav-link\" href=\"#\" onclick='load_section("+parseInt(id)+")'>\n" +
         "            "+name+"\n" +
         badge +
         "        </a>";
@@ -179,42 +233,41 @@ function render_select(name){
 }
 
 function nextPage() {
-    const formData = $('form').serializeArray();
-    if (formData.length !== questions_here*2-1) {
-        for (index = 1; index < formData.length; index += 2) {
-            try {
-                sessionStorage.setItem(formData[index].name, formData[index].value);
-                sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
-                if (!answered.includes(page_id)) {
-                    answered.push(page_id);
-                }
-            } catch (e) {
-                null;
-            }
-        }
-    }
+    // const formData = $('form').serializeArray();
+    // if (formData.length !== questions_here*2-1) {
+    //     for (index = 1; index < formData.length; index += 2) {
+    //         try {
+    //             sessionStorage.setItem(formData[index].name, formData[index].value);
+    //             sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+    //             if (!answered.includes(page_id)) {
+    //                 answered.push(page_id);
+    //             }
+    //         } catch (e) {
+    //             null;
+    //         }
+    //     }
+    // }
     page_id += 1;
-    if (page_id === stages_count){
-        document.querySelector('#next').setAttribute("value", "Next Section");
-        document.querySelector('#next').setAttribute("onclick", "nextStage();");
-    }
-    if (answered_stages.length+1 === json_data.sections.length){
-        document.querySelector('#next').setAttribute("value", "Finish");
-        document.querySelector('#next').setAttribute("onclick", "submitData();");
-        document.querySelector('#next').setAttribute("id", "finish");
-        document.querySelector('#finish').setAttribute("data-toggle", "tooltip");
-        document.querySelector('#finish').setAttribute("data-placement", "tooltip");
-        document.querySelector('#finish').setAttribute("title",
-            "Please, fill up all grey sections!");
-        $('#finish').attr('disabled', true);
-    }
+    // if (page_id === stages_count){
+    //     document.querySelector('#next').setAttribute("value", "Next Section");
+    //     document.querySelector('#next').setAttribute("onclick", "nextSection();");
+    // }
+    // if (answered_stages.length+1 === json_data.sections.length){
+    //     document.querySelector('#next').setAttribute("value", "Finish");
+    //     document.querySelector('#next').setAttribute("onclick", "submitData();");
+    //     document.querySelector('#next').setAttribute("id", "finish");
+    //     document.querySelector('#finish').setAttribute("data-toggle", "tooltip");
+    //     document.querySelector('#finish').setAttribute("data-placement", "tooltip");
+    //     document.querySelector('#finish').setAttribute("title",
+    //         "Please, fill up all grey sections!");
+    //     $('#finish').attr('disabled', true);
+    // }
     stage_id = current_stages[page_id-1].name;
     push_data(json_data);
 }
 
 function previousPage() {
     const formData = $('form').serializeArray();
-    console.log(formData);
     for (index = 1; index < formData.length; index += 2) {
         try {
             sessionStorage.setItem(formData[index].name, formData[index].value);
@@ -230,21 +283,21 @@ function previousPage() {
     push_data(json_data);
 }
 
-function nextStage() {
-    const formData = $('form').serializeArray();
-    if (formData.length !== questions_here*2-1) {
-        for (index = 1; index < formData.length; index += 2) {
-            try {
-                sessionStorage.setItem(formData[index].name, formData[index].value);
-                sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
-                if (!answered.includes(page_id)) {
-                    answered.push(page_id);
-                }
-            } catch (e) {
-                null;
-            }
-        }
-    }
+function nextSection() {
+    // const formData = $('form').serializeArray();
+    // if (formData.length !== questions_here*2-1) {
+    //     for (index = 1; index < formData.length; index += 2) {
+    //         try {
+    //             sessionStorage.setItem(formData[index].name, formData[index].value);
+    //             sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+    //             if (!answered.includes(page_id)) {
+    //                 answered.push(page_id);
+    //             }
+    //         } catch (e) {
+    //             null;
+    //         }
+    //     }
+    // }
     clearData();
     current_stages = [];
     answered_stages.push(section_id);
@@ -257,7 +310,6 @@ function nextStage() {
 function submitData() {
     let finalObj = {};
     const formData = $('form').serializeArray();
-    console.log(formData);
     for (index = 1; index < formData.length; index += 2) {
         try {
             sessionStorage.setItem(formData[index].name, formData[index].value);
@@ -279,9 +331,9 @@ function submitData() {
     }
 
     let http = new XMLHttpRequest();
-    let url = '/answers/1';
+    let url = $('#get_data').attr("api").match(/.*\/(.*)$/);
     let csrfToken = document.cookie.replace('csrftoken=', '');
-    http.open('POST', url, true);
+    http.open('POST', '/answers/' +url[url.length-1], true);
     http.setRequestHeader('Content-type', 'text');
     http.setRequestHeader('csrfmiddlewaretoken', csrfToken);
 
@@ -289,6 +341,7 @@ function submitData() {
     http.send(JSON.stringify(finalObj));
     http.onreadystatechange = function() {
         if (http.readyState == XMLHttpRequest.DONE && http.status == 200) {
+            sessionStorage.clear();
             window.location.href = "/dash/user";
         }
     }

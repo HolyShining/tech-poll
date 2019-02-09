@@ -2,16 +2,20 @@ from django.http import JsonResponse
 from django.views import View
 
 from answers.models import AnswersModel
+from authentication.models import UserData
 
 
 class UserAnswersAPI(View):
-    def get(self, request):
-        finalJSON = {'User': 'Nickname',
-                     'Department': 'WebUI',
+    def get(self, request, user):
+        name, surname = user.split('-')
+        obj = UserData.objects.get(name__iexact=name, surname__iexact=surname)
+        print()
+        finalJSON = {'User': '{} {}'.format(name, surname),
+                     'Department': obj.departmentsmodel_set.first().name,
                      'Answers': dict()}
 
-        print(AnswersModel.objects.filter(f_user_id=23))
-        for answer in list(AnswersModel.objects.filter(f_user_id=23)):
+        print(AnswersModel.objects.filter(f_user=obj.f_auth))
+        for answer in list(AnswersModel.objects.filter(f_user=obj.f_auth)):
             finalJSON['Answers'][answer.f_question.name] = {}
             if answer.answers_like:
                 like_to_do = 'Yes'

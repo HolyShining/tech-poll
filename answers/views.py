@@ -9,11 +9,11 @@ from authentication.decorators import user_role_required
 
 class AnswersView(View):
     @user_role_required
-    def get(self, request, department_id):
-        api_link = '/api/questions/{}'.format(str(department_id))
+    def get(self, request, department):
+        api_link = '/api/questions/{}'.format(department)
         return render(request, 'answers/answers.html', {'api_link': api_link})
 
-    def post(self, request, department_id):
+    def post(self, request, department):
         json_string = str(request.body.decode('UTF-8'))
         answers = dict(json.loads(json_string))
         query_list = []
