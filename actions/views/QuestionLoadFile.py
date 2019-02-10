@@ -21,9 +21,9 @@ class QuestionLoadFile(LoadFile):
                 stage_id = StagesModel.objects.get(name=line[1]).pk
 
             try:
-                if not StagesModel.objects.filter(name=name).exists():
+                if not QuestionsModel.objects.filter(name=name).exists():
                     self._query_list.append(QuestionsModel(name=name, hint=hint, f_stage_id=stage_id))
-            except StagesModel.DoesNotExist:
+            except QuestionsModel.DoesNotExist:
                 self.send_message(messages.ERROR,
                                   '{} does not exist'.format(line[1]))
         if self._query_list:

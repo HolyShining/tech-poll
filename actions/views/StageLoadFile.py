@@ -12,9 +12,10 @@ class StageLoadFile(LoadFile):
         self.file = request.FILES['loaded_file']
         for line in self.get_file_context():
             try:
+                print(line[0], line[1])
                 section_id = SectionsModel.objects.get(name=line[1]).pk
-                print(line[0], section_id)
                 if not StagesModel.objects.filter(name=line[0]).exists():
+                    print('appended')
                     self._query_list.append(StagesModel(name=line[0], f_section_id=section_id))
             except SectionsModel.DoesNotExist:
                 self.send_message(messages.ERROR,

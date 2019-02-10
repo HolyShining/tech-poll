@@ -10,6 +10,7 @@ answered = [];
 questions_here = 0;
 current_stages = [];
 section_id = 0;
+sections_count={};
 
 window.fetch($('#get_data').attr("api"))
     .then(function(response){
@@ -17,6 +18,11 @@ window.fetch($('#get_data').attr("api"))
     }).then(function(json){
     json_data = json;
     filldata(section_id);
+    for (let section_id = 0; section_id < json_data.sections.length; section_id++) {
+        sections_count[json_data.sections[section_id].name] = json_data.stages.filter(function (obj) {
+            return obj.section === json_data.sections[section_id].name;
+        }).length;
+    }
     push_data(json);
 });
 
@@ -43,6 +49,7 @@ function load_page(page){
 }
 
 function load_section(id){
+    console.log(all_stages);
     all_stages[section] = answered;
     section = json_data.sections[id].name;
 
@@ -104,6 +111,7 @@ function push_data(json){
                         }
                     }
                 }
+                update_sections();
                 if (page_id === stages_count && answered.length === stages_count){
                     $('#finish').attr('disabled', false);
                     $('#finish').tooltip('disable');
@@ -123,13 +131,15 @@ function push_data(json){
     console.log(answered);
 
     if (page_id === current_stages.length || answered.length === current_stages.length){
+        answered_stages.push(section_id);
         document.querySelector('#next').setAttribute("value", "Next Section");
         document.querySelector('#next').setAttribute("onclick", "nextSection();");
     } else {
         document.querySelector('#next').setAttribute("value", "Next");
         document.querySelector('#next').setAttribute("onclick", "nextPage();");
     }
-    if (answered_stages.length+1 === json_data.sections.length){
+    if ((page_id === current_stages.length || answered.length === current_stages.length) &&
+        section === json_data.sections[json_data.sections.length-1].name){
         document.querySelector('#next').setAttribute("value", "Finish");
         document.querySelector('#next').setAttribute("onclick", "submitData();");
         document.querySelector('#next').setAttribute("id", "finish");
@@ -139,16 +149,15 @@ function push_data(json){
             "Please, fill up all grey sections!");
         $('#finish').attr('disabled', true);
     }
-    // if (answered_stages.length+1 === json_data.sections.length){
-    //     document.querySelector('#next').setAttribute("value", "Finish");
-    //     document.querySelector('#next').setAttribute("onclick", "submitData();");
-    //     document.querySelector('#next').setAttribute("id", "finish");
-    //     document.querySelector('#finish').setAttribute("data-toggle", "tooltip");
-    //     document.querySelector('#finish').setAttribute("data-placement", "tooltip");
-    //     document.querySelector('#finish').setAttribute("title",
-    //         "Please, fill up all grey sections!");
-    //     $('#finish').attr('disabled', true);
-    // }
+}
+
+function update_sections() {
+    sections_count[section] -= 1;
+    document.querySelector('#sections').innerHTML = '';
+    for (number=0; number<json_data.sections.length; number++){
+        document.querySelector('#sections').innerHTML +=
+            render_sections(number, json_data.sections[number].name);
+    }
 }
 
 function getNumberOfStage(section){
@@ -158,15 +167,8 @@ function getNumberOfStage(section){
 }
 
 function render_sections(id, name) {
-    let count = 0;
-    if (!answered_stages.includes(id)) {
-        count = getNumberOfStage(name);
-    }
-    if (section===name){
-        count = stages_count - answered.length;
-    }
-    let badge = "<span class=\"badge badge-pill bg-light align-text-bottom\">"+count+"</span>\n";
-    if (count < 1){
+    let badge = "<span class=\"badge badge-pill bg-light align-text-bottom\">"+sections_count[name]+"</span>\n";
+    if (sections_count[name] < 1){
         badge = '';
     }
     const element = "<a class=\"nav-link\" href=\"#\" onclick='load_section("+parseInt(id)+")'>\n" +
@@ -233,48 +235,38 @@ function render_select(name){
 }
 
 function nextPage() {
-    // const formData = $('form').serializeArray();
-    // if (formData.length !== questions_here*2-1) {
-    //     for (index = 1; index < formData.length; index += 2) {
-    //         try {
-    //             sessionStorage.setItem(formData[index].name, formData[index].value);
-    //             sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
-    //             if (!answered.includes(page_id)) {
-    //                 answered.push(page_id);
-    //             }
-    //         } catch (e) {
-    //             null;
-    //         }
-    //     }
-    // }
+    const formData = $('form').serializeArray();
+    if (formData.length !== questions_here*2-1) {
+        for (index = 1; index < formData.length; index += 2) {
+            try {
+                sessionStorage.setItem(formData[index].name, formData[index].value);
+                sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+                if (!answered.includes(page_id)) {
+                    answered.push(page_id);
+                }
+            } catch (e) {
+                null;
+            }
+        }
+    }
     page_id += 1;
-    // if (page_id === stages_count){
-    //     document.querySelector('#next').setAttribute("value", "Next Section");
-    //     document.querySelector('#next').setAttribute("onclick", "nextSection();");
-    // }
-    // if (answered_stages.length+1 === json_data.sections.length){
-    //     document.querySelector('#next').setAttribute("value", "Finish");
-    //     document.querySelector('#next').setAttribute("onclick", "submitData();");
-    //     document.querySelector('#next').setAttribute("id", "finish");
-    //     document.querySelector('#finish').setAttribute("data-toggle", "tooltip");
-    //     document.querySelector('#finish').setAttribute("data-placement", "tooltip");
-    //     document.querySelector('#finish').setAttribute("title",
-    //         "Please, fill up all grey sections!");
-    //     $('#finish').attr('disabled', true);
-    // }
     stage_id = current_stages[page_id-1].name;
     push_data(json_data);
 }
 
 function previousPage() {
     const formData = $('form').serializeArray();
-    for (index = 1; index < formData.length; index += 2) {
-        try {
-            sessionStorage.setItem(formData[index].name, formData[index].value);
-            sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
-        }
-        catch (e) {
-            null;
+    if (formData.length !== questions_here*2-1) {
+        for (index = 1; index < formData.length; index += 2) {
+            try {
+                sessionStorage.setItem(formData[index].name, formData[index].value);
+                sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
+                if (!answered.includes(page_id)) {
+                    answered.push(page_id);
+                }
+            } catch (e) {
+                null;
+            }
         }
     }
     answered.push(page_id);
@@ -284,23 +276,8 @@ function previousPage() {
 }
 
 function nextSection() {
-    // const formData = $('form').serializeArray();
-    // if (formData.length !== questions_here*2-1) {
-    //     for (index = 1; index < formData.length; index += 2) {
-    //         try {
-    //             sessionStorage.setItem(formData[index].name, formData[index].value);
-    //             sessionStorage.setItem(formData[index + 1].name, formData[index + 1].value);
-    //             if (!answered.includes(page_id)) {
-    //                 answered.push(page_id);
-    //             }
-    //         } catch (e) {
-    //             null;
-    //         }
-    //     }
-    // }
     clearData();
     current_stages = [];
-    answered_stages.push(section_id);
     answered = [];
     section_id += 1;
     filldata(section_id);
