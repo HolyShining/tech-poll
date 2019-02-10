@@ -15,7 +15,7 @@
 }
 
 main > .container {
-  padding: 60px 15px 0;
+    padding: 60px 15px 0;
 }
 
 .container {
@@ -23,11 +23,17 @@ main > .container {
 }
 
 .footer > .container {
-  padding-right: 15px;
-  padding-left: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
 }
 
 code {
-  font-size: 80%;
+    font-size: 80%;
+}
+.alert{
+    margin-top: 70px;
+}
+.card-deck {
+    margin-bottom: 20px;
 }
 

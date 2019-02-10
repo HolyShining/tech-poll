@@ -8,75 +8,88 @@
         {{ message }}
       </div>
     {% endif %}
-    <h1>Logged as admin:</h1>
-{#  <div class="card-deck">#}
-{#  <div class="card text-center">#}
-{#    <div class="card-body">#}
-{#      <h5 class="card-title">Users Control</h5>#}
-{#      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
-{#    </div>#}
-{#    <div class="card-footer">#}
-{#      <small class="text-muted">Last updated 3 mins ago</small>#}
-{#    </div>#}
-{#  </div>#}
-{#  <div class="card text-center">#}
-{#    <div class="card-body">#}
-{#      <h5 class="card-title">Card title</h5>#}
-{#      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>#}
-{#    </div>#}
-{#    <div class="card-footer">#}
-{#      <small class="text-muted">Last updated 3 mins ago</small>#}
-{#    </div>#}
-{#  </div>#}
-{#  <div class="card text-center">#}
-{#    <div class="card-body">#}
-{#      <h5 class="card-title">Card title</h5>#}
-{#      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>#}
-{#    </div>#}
-{#    <div class="card-footer">#}
-{#      <small class="text-muted">Last updated 3 mins ago</small>#}
-{#    </div>#}
-{#  </div>#}
-{#</div>#}
-    <div class="row">
-      <a href="{% url 'create-user' %}"><h4>Register a user</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'all-users' %}"><h4>All Users</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'add-user-to-departments' %}"><h4>Connect User To Department</h4></a>
+    <div class="card-deck">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Users Control</h5>
+          <div class="btn-group-vertical">
+            <a href="{% url 'create-user' %}" class="btn btn-outline-dark">Register a user</a>
+            <a href="{% url 'all-users' %}" class="btn btn-outline-dark">All Users</a>
+            <a href="{% url 'add-user-to-departments' %}" class="btn btn-outline-dark">Connect User To Department</a>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">All operations with users.</small>
+        </div>
+      </div>
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Departments Control</h5>
+          <div class="btn-group-vertical">
+            <a href="{% url 'create-department' %}" class="btn btn-outline-dark">Create a Department</a>
+            <a href="{% url 'departments' %}" class="btn btn-outline-dark">Show Departments</a>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Change list of questions and create departments.</small>
+        </div>
+      </div>
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Questions Control</h5>
+          <p class="card-text">
+          <div class="btn-group-vertical">
+            <a href="{% url 'create-question' %}" class="btn btn-outline-dark">Create a Question</a>
+            <a href="{% url 'questions' %}" class="btn btn-outline-dark">Show Questions</a>
+            <a href="{% url 'load-question-file' %}" class="btn btn-outline-dark">Load from file</a>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Create questions, edit, or load it from file.</small>
+        </div>
+      </div>
     </div>
-    <div class="row">
-      <a href="{% url 'create-department' %}"><h4>Create a Department</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'departments' %}"><h4>Show Departments</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="#"><h4>Load from file</h4></a>
-    </div>
-    <div class="row">
-      <a href="{% url 'create-question' %}"><h4>Create a Question</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'questions' %}"><h4>Show Questions</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'load-question-file' %}"><h4>Load from file</h4></a>
-    </div>
-    <div class="row">
-      <a href="{% url 'create-stage' %}"><h4>Create a Stage</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'stages' %}"><h4>Show Stages</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'load-stage-file' %}"><h4>Load from file</h4></a>
-    </div>
-    <div class="row">
-      <a href="{% url 'create-section' %}"><h4>Create a Section</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'sections' %}"><h4>Show Sections</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'load-sections-file' %}"><h4>Load from file</h4></a>
-    </div>
-    <div class="row">
-      <a href="{% url 'create-grade-view' %}"><h4>Create a Grade</h4></a>
-      <h4>&nbsp;|&nbsp;</h4>
-      <a href="{% url 'grades' %}"><h4>Show Grades</h4></a>
+      <div class="card-deck">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Stages Control</h5>
+          <div class="btn-group-vertical">
+            <a href="{% url 'create-stage' %}" class="btn btn-outline-dark">Create a Stage</a>
+            <a href="{% url 'stages' %}" class="btn btn-outline-dark">Show Stages</a>
+            <a href="{% url 'load-stage-file' %}" class="btn btn-outline-dark">Load from file</a>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Create stages, edit, or load it from file.</small>
+        </div>
+      </div>
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Sections Control</h5>
+          <p class="card-text">
+          <div class="btn-group-vertical">
+            <a href="{% url 'create-section' %}" class="btn btn-outline-dark">Create a Section</a>
+            <a href="{% url 'sections' %}" class="btn btn-outline-dark">Show Sections</a>
+            <a href="{% url 'load-sections-file' %}" class="btn btn-outline-dark">Load from file</a>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Create sections, edit, or load it from file.</small>
+        </div>
+      </div>
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Grades Control</h5>
+          <p class="card-text">
+          <div class="btn-group-vertical">
+            <a href="{% url 'create-grade-view' %}" class="btn btn-outline-dark">Create a Grade</a>
+            <a href="{% url 'grades' %}" class="btn btn-outline-dark">Show Grades</a>
+          </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Control grades in application.</small>
+        </div>
+      </div>
     </div>
   </div>
 {% endblock %}
