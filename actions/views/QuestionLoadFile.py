@@ -10,6 +10,7 @@ class QuestionLoadFile(LoadFile):
     @admin_role_required
     def post(self, request):
         self.file = request.FILES['loaded_file']
+        query_list = []
         for line in self.get_file_context():
             if len(line) == 3:
                 name = line[0]
@@ -22,14 +23,13 @@ class QuestionLoadFile(LoadFile):
 
             try:
                 if not QuestionsModel.objects.filter(name=name).exists():
-                    self._query_list.append(QuestionsModel(name=name, hint=hint, f_stage_id=stage_id))
+                    query_list.append(QuestionsModel(name=name, hint=hint, f_stage_id=stage_id))
             except QuestionsModel.DoesNotExist:
                 self.send_message(messages.ERROR,
                                   '{} does not exist'.format(line[1]))
-        if self._query_list:
-            QuestionsModel.objects.bulk_create(self._query_list)
+        if query_list:
+            QuestionsModel.objects.bulk_create(query_list)
             self.send_message(status=messages.SUCCESS,
                               message='File successfully loaded!')
-            self._query_list = []
 
         return redirect('auth-routing')

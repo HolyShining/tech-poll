@@ -10,5 +10,7 @@
     <h1>User: <i>{{ object }}</i></h1>
     <h4>Username: {{ object.f_auth.username }}</h4>
     <h4>Password: {{ object.encrypted_pass }}</h4>
+    <input type="button" class="btn btn-lg btn-secondary btn-block col-md-3" onClick="history.go(-1);"
+           value="Go back">
   </div>
 {% endblock %}

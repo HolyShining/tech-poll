@@ -10,13 +10,13 @@ class SectionLoadFile(LoadFile):
     @admin_role_required
     def post(self, request):
         self.file = request.FILES['loaded_file']
+        query_list = []
         for line in self.get_file_context():
             if not SectionsModel.objects.filter(name=line[0]).exists():
-                self._query_list.append(SectionsModel(name=line[0]))
-        if self._query_list:
-            SectionsModel.objects.bulk_create(self._query_list)
+                query_list.append(SectionsModel(name=line[0]))
+        if query_list:
+            SectionsModel.objects.bulk_create(query_list)
             self.send_message(status=messages.SUCCESS,
                               message='File successfully loaded!')
-            self._query_list = []
 
         return redirect('auth-routing')

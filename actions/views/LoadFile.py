@@ -12,7 +12,6 @@ from authentication.decorators import admin_role_required
 class LoadFile(View, ISendMessage):
     request = None
     file = None
-    _query_list = []
 
     @admin_role_required
     def get(self, request):

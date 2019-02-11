@@ -11,9 +11,5 @@ def get_password(lenght):
     return password
 
 
-def encode(text):
-    return base64.b64decode(text)
-
-
 def decode(text):
     return base64.b64decode(text)

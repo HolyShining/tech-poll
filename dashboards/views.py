@@ -1,11 +1,9 @@
-from django.db.models import QuerySet
 from django.shortcuts import render
 from django.contrib.messages import get_messages
 from answers.models import AnswersModel
 from authentication.models import UserData
 from authentication.decorators import admin_role_required, user_role_required
 
-# Create your views here.
 from django.views.generic import View
 
 

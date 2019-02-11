@@ -16,6 +16,6 @@ class CreateGradeView(View):
         print(grade)
         messages.add_message(request,
                              messages.SUCCESS,
-                             'Section "{}" created successfully!'.format(grade.name))
+                             'Grade "{}" created successfully!'.format(grade.name))
         grade.save()
         return redirect('auth-routing')
