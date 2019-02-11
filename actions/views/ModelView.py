@@ -6,17 +6,21 @@ from authentication.decorators import admin_role_required
 
 
 class ModelView(View):
-    model = None
-    name = None
-    edit = None
+    """Base class to View model"""
+    model = None  # Model class
+    name = None  # Human name of object
+    edit = None  # Name of edit URL
 
     @admin_role_required
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
+        """Show all object for specified model"""
         obj = self.model.objects.all()
         return render(request, 'actions/model_view.html', {'objects': obj,
                                                            'name': self.name,
                                                            'edit': self.edit})
 
+
+# Child classes
 
 class SectionView(ModelView):
     model = SectionsModel

@@ -6,6 +6,8 @@ from django.views.generic import View
 
 class LoginView(View):
     def post(self, request):
+        # If user exists - login, otherwise send 'incorrect password' message
+        # And redirect to homepage
         user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             auth.login(request, user)
@@ -17,4 +19,5 @@ class LoginView(View):
             return redirect('home-page')
 
     def get(self, request, *args, **kwargs):
+        # If someone tries to GET /login, raise 404 error
         raise Http404

@@ -1,108 +1,16 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from actions.models import SectionsModel, StagesModel, QuestionsModel, DepartmentsModel, GradesModel
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import View
-from django.contrib import messages
 from authentication.decorators import admin_role_required
 
 
 class DetailView(View):
+    """Base class for all details in Actions app"""
     model = None
     template = None
     add_models = None
 
     @admin_role_required
     def get(self, request, object_id):
+        # Render basic data
         obj = get_object_or_404(self.model, pk=object_id)
         return render(request, self.template, {'obj': obj})
-
-
-class SectionDetailView(DetailView):
-    model = SectionsModel
-    template = 'actions/form_sections.html'
-
-    def post(self, request, object_id):
-        section = get_object_or_404(SectionsModel, pk=object_id)
-        section.name = request.POST['name']
-        section.save()
-        messages.add_message(request, messages.SUCCESS, 'Section updated successfully')
-        return redirect('auth-routing')
-
-
-class StageDetailView(DetailView):
-    model = StagesModel
-    template = 'actions/form_stages.html'
-    add_models = SectionsModel
-
-    def get(self, request, object_id):
-        obj = get_object_or_404(self.model, pk=object_id)
-        sections = self.add_models.objects.all()
-        return render(request, self.template, {'obj': obj,
-                                               'sections': sections})
-
-    def post(self, request, object_id):
-        stage = get_object_or_404(self.model, pk=object_id)
-        stage.name = request.POST['name']
-        stage.f_section_id = request.POST['section']
-        stage.save()
-        messages.add_message(request, messages.SUCCESS, 'Stage updated successfully')
-        return redirect('auth-routing')
-
-
-class QuestionDetailView(DetailView):
-    model = QuestionsModel
-    template = 'actions/form_questions.html'
-    add_models = StagesModel
-
-    def get(self, request, object_id):
-        stages = self.add_models.objects.all()
-        obj = get_object_or_404(self.model, pk=object_id)
-        return render(request, self.template, {'obj': obj,
-                                               'stages': stages})
-
-    def post(self, request, object_id):
-        question = get_object_or_404(self.model, pk=object_id)
-        question.name = request.POST['name']
-        question.hint = request.POST['hint']
-        question.f_stage_id = request.POST['stage']
-        question.save()
-        messages.add_message(request, messages.SUCCESS, 'Question updated successfully')
-        return redirect('auth-routing')
-
-
-class DepartmentsDetailView(DetailView):
-    model = DepartmentsModel
-    template = 'actions/form_departments.html'
-    add_models = QuestionsModel
-
-    def get(self, request, object_id):
-        questions = self.add_models.objects.all()
-        obj = get_object_or_404(self.model, pk=object_id)
-        selected = [q.id for q in DepartmentsModel.objects.get(id=1).questions.all()]
-        print(selected)
-        return render(request, self.template, {'obj': obj,
-                                               'questions': questions,
-                                               'selected': selected})
-
-    def post(self, request, object_id):
-        department = get_object_or_404(self.model, pk=object_id)
-        department.name = request.POST['name']
-        department.save()
-        for question in map(int, request.POST.getlist('questions')):
-            department.questions.add(QuestionsModel.objects.get(id=question))
-        messages.add_message(request,
-                             messages.SUCCESS,
-                             'Department "{}" updated successfully!'.format(department.name))
-        department.save()
-        return redirect('auth-routing')
-
-
-class GradeDetailView(DetailView):
-    model = GradesModel
-    template = 'actions/form_grade.html'
-
-    def post(self, request, object_id):
-        grade = get_object_or_404(GradesModel, pk=object_id)
-        grade.name = request.POST['name']
-        grade.save()
-        messages.add_message(request, messages.SUCCESS, 'Section updated successfully')
-        return redirect('auth-routing')

@@ -10,6 +10,8 @@ from authentication.decorators import admin_role_required
 class AddUserToDepartment(View):
     @admin_role_required
     def get(self, request):
+        # Get users and departments for dropdowns
+        # and send it to render
         users = UserData.objects.all()
         departments = DepartmentsModel.objects.all()
         return render(request, 'actions/form_departments_attach.html', {'users': users,
@@ -17,6 +19,8 @@ class AddUserToDepartment(View):
 
     @admin_role_required
     def post(self, request):
+        # Fetch data from form and create Many2Many connection
+        # between user and department
         dep = DepartmentsModel.objects.get(id=request.POST['department'])
         dep.users.add(UserData.objects.get(id=request.POST['selected_user']))
         messages.add_message(request,

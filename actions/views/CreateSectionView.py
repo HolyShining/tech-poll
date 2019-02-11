@@ -13,8 +13,8 @@ class CreateSectionView(View):
 
     @admin_role_required
     def post(self, request):
+        # Show message when creating section
         section = SectionsModel(name=request.POST['name'])
-        print(section)
         messages.add_message(request,
                              messages.SUCCESS,
                              'Section "{}" created successfully!'.format(section.name))

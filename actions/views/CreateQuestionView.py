@@ -9,11 +9,13 @@ from authentication.decorators import admin_role_required
 class CreateQuestionView(View):
     @admin_role_required
     def get(self, request):
+        # Fetch from db all stages and render it
         stages = StagesModel.objects.all()
         return render(request, 'actions/form_questions.html', {'stages': stages})
 
     @admin_role_required
     def post(self, request):
+        # Create new question, connect it to stage and show message
         question = QuestionsModel(name=request.POST['name'], hint=request.POST['hint'])
         question.f_stage_id = request.POST['stage']
         messages.add_message(request,

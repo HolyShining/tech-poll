@@ -5,6 +5,10 @@ from authentication.models import UserData
 
 
 def admin_role_required(function):
+    """Check if user have got a Admin role and
+     allow access for following function
+     otherwise redirect to homepage if not logged
+     or at routing if user has got another role"""
     @wraps(function)
     def wrapper(self, request, *args, **kwargs):
         try:

@@ -9,6 +9,11 @@ from authentication.decorators import admin_role_required
 class StageLoadFile(LoadFile):
     @admin_role_required
     def post(self, request):
+        """
+        Specified Stage load file for pattern
+        'stage_name' 'section_name'
+        also fetch existing objects
+        """
         self.file = request.FILES['loaded_file']
         query_list = []
         for line in self.get_file_context():

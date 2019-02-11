@@ -9,6 +9,7 @@ from authentication.decorators import admin_role_required
 class SignUpView(View):
     @admin_role_required
     def get(self, request, *args, **kwargs):
+        # Show form for creating user
         return render(request, 'authentication/createuser.html', {})
 
     @admin_role_required

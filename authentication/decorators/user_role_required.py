@@ -5,6 +5,7 @@ from authentication.models import UserData
 
 
 def user_role_required(function):
+    """Check if user logged in and allowed for actions in system"""
     @wraps(function)
     def wrapper(self, request, *args, **kwargs):
         try:

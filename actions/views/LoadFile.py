@@ -10,6 +10,7 @@ from authentication.decorators import admin_role_required
 
 
 class LoadFile(View, ISendMessage):
+    """Base class for loading files"""
     request = None
     file = None
 
@@ -18,11 +19,13 @@ class LoadFile(View, ISendMessage):
         return render(request, 'actions/load_from_file.html')
 
     def send_message(self, status: int, message: str):
+        """Send message to user with selected status and specified message"""
         messages.add_message(self.request,
                              status,
                              message)
 
     def get_file_context(self) -> list:
+        """Translate binary file into list"""
         return file_worker(self.file)
 
 

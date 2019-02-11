@@ -8,5 +8,6 @@ class AllUsersView(View):
 
     @admin_role_required
     def get(self, request):
+        # Load all users and show up
         users = models.UserData.objects.all()
         return render(request, 'authentication/all_users.html', {'users': users})

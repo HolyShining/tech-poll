@@ -9,6 +9,11 @@ from authentication.decorators import admin_role_required
 class QuestionLoadFile(LoadFile):
     @admin_role_required
     def post(self, request):
+        """
+        Specified Question load file for pattern
+        'question_name' 'hint' 'name_of_stage' or
+        'question_name' 'name_of_stage' because hint is optional
+        """
         self.file = request.FILES['loaded_file']
         query_list = []
         for line in self.get_file_context():

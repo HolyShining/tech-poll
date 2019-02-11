@@ -1,5 +1,4 @@
 from django.urls import path, include
-from actions.views import DepartmentResponse, UserAnswerResponse
 from . import views
 
 urlpatterns = [

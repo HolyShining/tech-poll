@@ -9,6 +9,10 @@ from authentication.decorators import admin_role_required
 class SectionLoadFile(LoadFile):
     @admin_role_required
     def post(self, request):
+        """
+        Specified Section load file for pattern
+        'section_name'
+        """
         self.file = request.FILES['loaded_file']
         query_list = []
         for line in self.get_file_context():
