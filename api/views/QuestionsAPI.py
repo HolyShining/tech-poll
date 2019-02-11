@@ -21,7 +21,6 @@ class QuestionsAPI(View):
         for grade in list(GradesModel.objects.all()):
             result['grades'].append({'name': grade.name})
 
-        print(request.user.id)
         for question in list(dep.questions.order_by('-id').all()):
             result['questions'].append({'name': question.name, 'stages': question.f_stage.name, 'hint': question.hint})
             result['stages'].append({'name': question.f_stage.name, 'section': question.f_stage.f_section.name})

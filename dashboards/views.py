@@ -11,6 +11,7 @@ class AdminView(View):
 
     @admin_role_required
     def get(self, request):
+        # Render Admin dashboard with error/success messages
         messages = get_messages(request)
         view_message = None
         for message in messages:
@@ -22,14 +23,15 @@ class UserView(View):
 
     @user_role_required
     def get(self, request):
+        # Render User dashboard
         departments = UserData.objects.get(f_auth_id=request.user.id).departmentsmodel_set.all()
         if not departments:
+            # Show message if user haven't any test yet
             return render(request, 'dashboards/user_dashboard.html', {'msg': True})
         messages = get_messages(request)
         view_message = None
         for message in messages:
             view_message = message
-        print(view_message)
         passed = AnswersModel.objects.filter(f_user=request.user.id).exists()
         return render(request, 'dashboards/user_dashboard.html', {'departments': departments,
                                                                   'passed': passed})

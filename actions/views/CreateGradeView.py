@@ -14,7 +14,6 @@ class CreateGradeView(View):
     @admin_role_required
     def post(self, request):
         grade = GradesModel(name=request.POST['name'])
-        print(grade)
         messages.add_message(request,
                              messages.SUCCESS,
                              'Grade "{}" created successfully!'.format(grade.name))
