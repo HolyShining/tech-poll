@@ -4,22 +4,26 @@
   <div class="container">
 
     {% for d in departments %}
-  <div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">{{ d.name }}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Test Available</h6>
-    <p class="card-text">Some questions about activities upon development process and hard skills</p>
-    {% if passed %}
-      <p class="text-muted">You already passed the poll</p>
-    {% else %}
-    <a href="{% url 'answers' department=d.name %}" class="card-link">Start poll</a>
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{ d.name }}</h5>
+          {% if not passed %}
+            <h6 class="card-subtitle mb-2 text-muted">Test Available</h6>
+          {% else %}
+            <h6 class="card-subtitle mb-2 text-muted">Test Unavailable</h6>
+          {% endif %}
+          <p class="card-text">Some questions about activities upon development process and hard skills</p>
+          {% if passed %}
+            <p class="text-muted">You already passed the poll</p>
+          {% else %}
+            <a href="{% url 'answers' department=d.name %}" class="card-link">Start poll</a>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+    {% if msg %}
+      <h1 class="text-center">Unfortunately you haven't any courses yet...</h1>
     {% endif %}
-  </div>
-</div>
-  {% endfor %}
-  {% if msg %}
-    <h1 class="text-center">Unfortunately you haven't any courses yet...</h1>
-  {% endif %}
   </div>
 
 {% endblock %}

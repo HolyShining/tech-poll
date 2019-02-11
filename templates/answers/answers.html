@@ -33,7 +33,11 @@
       <input type="button" class="btn btn-secondary float-right text-right" id="next" onclick="nextPage();" value="Next">
     </form>
   </div>
-  <script src="{% static 'answers/get_data.js' %}" id="get_data" api="{{ api_link }}"></script>
+  <script src="{% static 'answers/rendering.js' %}"></script>
+  <script src="{% static 'answers/loaders.js' %}"></script>
+  <script src="{% static 'answers/paging.js' %}"></script>
+  <script src="{% static 'answers/send_data.js' %}"></script>
+  <script src="{% static 'answers/application.js' %}" id="get_data" api="{{ api_link }}"></script>
   <script>
       $(document).ready(function(){
           $('[data-toggle="tooltip"]').tooltip();
